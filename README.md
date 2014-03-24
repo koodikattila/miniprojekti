@@ -1,0 +1,4 @@
+miniprojekti
+============
+
+ohtu-kurssin miniprojekti
