@@ -38,31 +38,30 @@ public class JsonTiedonsaanti implements Tiedonsaanti {
     }
 
     @Override
-    public <T> void lisaaTieto(T tieto) {
-        tiedot.add(tieto);
+    public <T> void lisaaTieto(T... lisattavat) {
+        for (T lisattava : lisattavat) {
+            tiedot.add(lisattava);
+        }
     }
 
     @Override
     public void tallenna() throws IOException {
-        if (!tiedosto.exists()) {
-            tiedosto.createNewFile();
-        }
-        Writer kirjoittaja = new FileWriter(tiedosto);
-        for (Object tieto : tiedot) {
-            kirjoittaja.write(tieto.getClass() + "|");
-            kirjoittaja.write(tieto + "\n");
+        varmistaTiedosto();
+        try (Writer kirjoittaja = new FileWriter(tiedosto)) {
+            for (Object tieto : tiedot) {
+                kirjoittaja.write(tieto.getClass().getName() + "|");
+                kirjoittaja.write(tieto + "\n");
+            }
         }
     }
 
     @Override
     public void lataa() throws IOException {
+        varmistaTiedosto();
         tiedot.clear();
-        if (!tiedosto.exists()) {
-            tiedosto.createNewFile();
-        }
         try (Scanner lukija = new Scanner(tiedosto, kirjainjarjestelma)) {
             while (lukija.hasNextLine()) {
-                String[] rivi = lukija.nextLine().split("|");
+                String[] rivi = lukija.nextLine().split("\\|");
                 if (rivi.length == 2) {
                     try {
                         Class clazz = Class.forName(rivi[0]);
@@ -75,6 +74,14 @@ public class JsonTiedonsaanti implements Tiedonsaanti {
                 }
             }
         }
+    }
+
+    private void varmistaTiedosto() throws IOException {
+        File vanhempi = tiedosto.getParentFile();
+        if (vanhempi != null) {
+            vanhempi.mkdirs();
+        }
+        tiedosto.createNewFile();
     }
 
     public static class ParseException extends RuntimeException {

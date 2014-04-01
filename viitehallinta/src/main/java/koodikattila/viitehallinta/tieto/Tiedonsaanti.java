@@ -11,7 +11,7 @@ public interface Tiedonsaanti {
 
     <T> Collection<T> haeTiedot(Filtteri<T> filtteri, Class<T> clazz);
 
-    <T> void lisaaTieto(T lisattava);
+    <T> void lisaaTieto(T... lisattavat);
 
     public void tallenna() throws IOException;
 
