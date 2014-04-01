@@ -2,7 +2,9 @@ package koodikattila.viitehallinta.tieto;
 
 import com.google.gson.Gson;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
@@ -13,7 +15,7 @@ import java.util.Scanner;
  */
 public class JsonTiedonsaanti implements Tiedonsaanti {
 
-    private Collection<Object> tiedot;
+    private final Collection<Object> tiedot;
     private final Gson json;
     private final File tiedosto;
     private final String kirjainjarjestelma = "UTF-8";
@@ -45,24 +47,32 @@ public class JsonTiedonsaanti implements Tiedonsaanti {
         if (!tiedosto.exists()) {
             tiedosto.createNewFile();
         }
+        Writer kirjoittaja = new FileWriter(tiedosto);
+        for (Object tieto : tiedot) {
+            kirjoittaja.write(tieto.getClass() + "|");
+            kirjoittaja.write(tieto + "\n");
+        }
     }
 
     @Override
     public void lataa() throws IOException {
+        tiedot.clear();
         if (!tiedosto.exists()) {
             tiedosto.createNewFile();
         }
-        Scanner lukija = new Scanner(tiedosto, kirjainjarjestelma);
-        while (lukija.hasNextLine()) {
-            String[] rivi = lukija.nextLine().split("|");
-            if (rivi.length == 2) {
-                try {
-                    Class clazz = Class.forName(rivi[0]);
-                } catch (ClassNotFoundException ex) {
-                    throw new ParseException("Luokkaa " + rivi[0] + " ei löytynyt.");
+        try (Scanner lukija = new Scanner(tiedosto, kirjainjarjestelma)) {
+            while (lukija.hasNextLine()) {
+                String[] rivi = lukija.nextLine().split("|");
+                if (rivi.length == 2) {
+                    try {
+                        Class clazz = Class.forName(rivi[0]);
+                        tiedot.add(json.fromJson(rivi[1], clazz));
+                    } catch (ClassNotFoundException ex) {
+                        throw new ParseException("Luokkaa " + rivi[0] + " ei löytynyt.");
+                    }
+                } else {
+                    throw new ParseException("Väärän muotoinen rivi, jonka pituus on " + rivi.length);
                 }
-            } else {
-                throw new ParseException("Väärän muotoinen rivi, jonka pituus on " + rivi.length);
             }
         }
     }
