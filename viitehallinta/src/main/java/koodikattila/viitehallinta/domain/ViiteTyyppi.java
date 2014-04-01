@@ -1,5 +1,5 @@
 
-package koodikattila.viitehallinta;
+package koodikattila.viitehallinta.domain;
 
 /**
  *

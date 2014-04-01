@@ -1,5 +1,6 @@
-package koodikattila.viitehallinta;
+package koodikattila.viitehallinta.domain;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +16,13 @@ public class Viite {
     
     public Viite(ViiteTyyppi tyyppi) {
         this.tyyppi = tyyppi;
-        this.attribuutit = new HashMap<Attribuutti, String>();
+        this.attribuutit = new EnumMap<>(Attribuutti.class);
     }
     
+    /*
+     * Asettaa viiteoliolle parametrina annetun attribuutin arvoksi
+     * parametrina annetun arvon.
+     */
     public void asetaArvo(Attribuutti attr, String arvo) {
         this.attribuutit.put(attr, arvo);
     }
