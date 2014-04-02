@@ -34,7 +34,7 @@ public enum ViiteTyyppi {
         this.pakolliset = pakolliset;
     }
 
-    public List<Attribuutti> getPakolliset() {
+    public List<Attribuutti> haePakolliset() {
         return pakolliset;
     }
     

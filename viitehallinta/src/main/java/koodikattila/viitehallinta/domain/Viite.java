@@ -1,7 +1,6 @@
 package koodikattila.viitehallinta.domain;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,13 +26,32 @@ public class Viite {
         this.attribuutit.put(attr, arvo);
     }
     
+    /**
+     * Hakee attribuuttimapista tietyn arvon
+     * @param attr
+     * @return 
+     */
+    public String haeArvo(Attribuutti attr) {
+        return this.attribuutit.get(attr);
+    }
     /*
      * onkoValidi() -metodi palauttaa true, jos tällä viiteoliolla on asetettu kaikki viitteen
      * tyypille spesifioidut pakolliset kentät, ja muussa tapauksessa false
      * 
      */
     public boolean onkoValidi() {
-        return false;
+        List<Attribuutti> pakollisetAttribuutit = tyyppi.haePakolliset();
+        if (attribuutit.keySet().isEmpty()) {
+             if (!pakollisetAttribuutit.isEmpty()) {
+                 return false;
+             }
+        }
+        for(Attribuutti attribuutti : attribuutit.keySet()) {
+            if (!attribuutit.containsKey(attribuutti)) {
+                return false;
+            }
+        }
+        return true;
     }
     
 }
