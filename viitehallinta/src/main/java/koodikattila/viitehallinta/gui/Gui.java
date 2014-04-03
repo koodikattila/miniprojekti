@@ -4,6 +4,15 @@
  */
 package koodikattila.viitehallinta.gui;
 
+import java.util.List;
+import javax.swing.DefaultListModel;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+import koodikattila.viitehallinta.domain.Attribuutti;
+import koodikattila.viitehallinta.domain.Viite;
+import koodikattila.viitehallinta.domain.ViiteTyyppi;
+import koodikattila.viitehallinta.hallinta.Kontrolleri;
+
 /**
  *
  * @author kumikumi
@@ -14,7 +23,49 @@ public class Gui extends javax.swing.JFrame {
      * Creates new form Gui
      */
     public Gui() {
+        this.kontrolleri = new Kontrolleri();
         initComponents();
+    }
+
+    public void paivitaTaulukko() {
+        
+        TableModel model = new AbstractTableModel() {
+            
+            List<Attribuutti> sarakkeet = ((ViiteTyyppi) jList1.getSelectedValue()).haePakolliset();
+            List<Viite> viitteet = kontrolleri.hae((ViiteTyyppi)jList1.getSelectedValue(), "");
+            
+            @Override
+            public String getColumnName(int col) {
+                return sarakkeet.get(col).toString();
+            }
+
+            @Override
+            public int getRowCount() {
+                return viitteet.size();
+            }
+
+            @Override
+            public int getColumnCount() {
+                return sarakkeet.size();
+            }
+
+            @Override
+            public Object getValueAt(int row, int col) {
+                return viitteet.get(row).haeArvo(sarakkeet.get(col));
+            }
+
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return true;
+            }
+
+            @Override
+            public void setValueAt(Object value, int row, int col) {
+                viitteet.get(row).asetaArvo(sarakkeet.get(col), (String)value);
+            }
+        };
+
+        this.jTable1.setModel(model);
     }
 
     /**
@@ -31,15 +82,20 @@ public class Gui extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Book", "Article", "Inproceedings" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+        jList1.setModel(new DefaultListModel<ViiteTyyppi>());
+        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList1ValueChanged(evt);
+            }
         });
         jScrollPane1.setViewportView(jList1);
+        this.jList1.setListData(ViiteTyyppi.values());
 
         jTextField1.setText("filter");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
@@ -50,16 +106,27 @@ public class Gui extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         jScrollPane2.setViewportView(jTable1);
+
+        jButton1.setText("Lisää uusi");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lisaaNappiaPainettu(evt);
+            }
+        });
+
+        jButton2.setText("Poista");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                poistaNappiaPainettu(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -72,7 +139,12 @@ public class Gui extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE))
-                    .addComponent(jTextField1))
+                    .addComponent(jTextField1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -81,10 +153,14 @@ public class Gui extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -93,6 +169,26 @@ public class Gui extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+        if (evt.getValueIsAdjusting()) {
+            return;
+        }
+        this.paivitaTaulukko();
+    }//GEN-LAST:event_jList1ValueChanged
+
+    private void lisaaNappiaPainettu(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lisaaNappiaPainettu
+        kontrolleri.lisaaViite(new Viite((ViiteTyyppi) jList1.getSelectedValue()));
+        this.paivitaTaulukko();
+    }//GEN-LAST:event_lisaaNappiaPainettu
+
+    private void poistaNappiaPainettu(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_poistaNappiaPainettu
+        if (this.jTable1.getSelectedRow()<0) {
+            return;
+        }
+        kontrolleri.poista(this.jTable1.getSelectedRow());
+        this.paivitaTaulukko();
+    }//GEN-LAST:event_poistaNappiaPainettu
 
     /**
      * @param args the command line arguments
@@ -128,7 +224,12 @@ public class Gui extends javax.swing.JFrame {
             }
         });
     }
+
+    private Kontrolleri kontrolleri;
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
