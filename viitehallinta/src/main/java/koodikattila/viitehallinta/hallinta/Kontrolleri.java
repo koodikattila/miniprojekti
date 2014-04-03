@@ -22,7 +22,7 @@ public class Kontrolleri {
     
     public Kontrolleri() {
         this.viitteet = new ArrayList<>();
-        this.populoiLista();
+        //this.populoiLista();
         //TODO: fetchaa viitteet tiedostosta
     }
     
