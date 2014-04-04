@@ -1,4 +1,3 @@
-
 package koodikattila.viitehallinta.domain;
 
 /**

@@ -14,6 +14,5 @@ public class App {
                 new Gui().setVisible(true);
             }
         });
-
     }
 }
