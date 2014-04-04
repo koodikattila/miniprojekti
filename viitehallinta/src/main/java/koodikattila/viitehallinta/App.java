@@ -1,5 +1,7 @@
 package koodikattila.viitehallinta;
 
+import koodikattila.viitehallinta.gui.Gui;
+
 /**
  * Hello world!
  *
@@ -7,6 +9,11 @@ package koodikattila.viitehallinta;
 public class App {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Gui().setVisible(true);
+            }
+        });
+
     }
 }
