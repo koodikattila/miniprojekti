@@ -46,7 +46,7 @@ public class Kontrolleri {
     }
     
     public List<Viite> hae(ViiteTyyppi tyyppi, String hakusana) {
-        List<Viite> palautus = new ArrayList<Viite>();
+        List<Viite> palautus = new ArrayList<>();
         for (Viite v : this.viitteet) {
             if (v.getTyyppi().equals(tyyppi)) {
                 if (hakusana.isEmpty()) {
@@ -65,7 +65,13 @@ public class Kontrolleri {
         return palautus;
     }
     
+    /*
+    * Poistaa viitteen järjestelmästä parametrina annetun indeksin perusteella viimeksi haettujen listasta
+    */
     public void poista(int indeksi) {
+        if (this.viimeksiHaetut == null) {
+            return;
+        }
         this.viitteet.remove(this.viimeksiHaetut.get(indeksi));
         this.viimeksiHaetut.remove(this.viimeksiHaetut.get(indeksi));
     }
