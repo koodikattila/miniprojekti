@@ -95,12 +95,14 @@ public class Viite {
     // TODO: tagien vertailu
     @Override
     public boolean equals(Object obj) {
+        return obj == this;
+        /*
         if(obj == null) return false;
         if(!(obj instanceof Viite)) return false;
         Viite v = (Viite) obj;
         if(!avain.equals(v.getAvain())) return false;
         if(!attribuutit.equals(v.asetetutAttribuutit())) return false;
-        return true;
+        return true;*/
     }
     
     

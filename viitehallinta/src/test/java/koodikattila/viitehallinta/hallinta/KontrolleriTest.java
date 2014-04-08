@@ -30,39 +30,10 @@ public class KontrolleriTest {
 
     private Kontrolleri kontrolleri;
     private ArrayList<Viite> lista;
-    private final Tiedonsaanti tiedonsaanti = new Tiedonsaanti<Viite>() {
-
-        @Override
-        public Collection<Viite> haeTiedot(Filtteri<Viite> filtteri, Class<Viite> clazz) {
-            ArrayList<Viite> lista = new ArrayList<>();
-            lista.add(null);
-            return lista;
-        }
-
-        @Override
-        public void lisaaTieto(Viite... lisattavat) {
-        }
-
-        @Override
-        public void tallenna() throws IOException {
-        }
-
-        @Override
-        public void lataa() throws IOException {
-        }
-
-        @Override
-        public void close() throws IOException {
-        }
-    };
 
     @Before
     public void setUp() {
-        this.kontrolleri = new Kontrolleri(tiedonsaanti);
-        lista = new ArrayList<>();
-        lista.add(new Viite(ViiteTyyppi.article));
-        lista.add(new Viite(ViiteTyyppi.book));
-        lista.add(new Viite(ViiteTyyppi.conference));
+        this.kontrolleri = new Kontrolleri();
     }
 
     @After
@@ -140,6 +111,35 @@ public class KontrolleriTest {
 
     @Test
     public void testaaPopuloiLista() {
+        lista = new ArrayList<>();
+        lista.add(new Viite(ViiteTyyppi.article));
+        lista.add(new Viite(ViiteTyyppi.book));
+        lista.add(new Viite(ViiteTyyppi.conference));
+        kontrolleri = new Kontrolleri(new Tiedonsaanti<Viite>() {
+
+        @Override
+        public Collection<Viite> haeTiedot(Filtteri<Viite> filtteri, Class<Viite> clazz) {
+            System.out.println("haeTiedot: " + lista);
+            return lista;
+        }
+
+        @Override
+        public void lisaaTieto(Viite... lisattavat) {
+        }
+
+        @Override
+        public void tallenna() throws IOException {
+        }
+
+        @Override
+        public void lataa() throws IOException {
+        }
+
+        @Override
+        public void close() throws IOException {
+        }
+
+    });
         assertEquals(lista, kontrolleri.getViitteet());
     }
 }

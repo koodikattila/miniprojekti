@@ -32,12 +32,12 @@ public class Kontrolleri {
     public Kontrolleri(Tiedonsaanti tiedonsaanti) {
         this();
         this.tiedonsaanti = tiedonsaanti;
+        if(tiedonsaanti != null)
+            populoiLista();
     }
     
     public Kontrolleri() {
         this.viitteet = new ArrayList<>();
-        if(tiedonsaanti != null)
-            populoiLista();
         //TODO: fetchaa viitteet tiedostosta
     }
     
