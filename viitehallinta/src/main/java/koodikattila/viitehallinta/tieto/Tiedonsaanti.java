@@ -6,14 +6,22 @@ import java.util.Collection;
 /**
  *
  * @author Koodikattila
+ * @param <T>
  */
-public interface Tiedonsaanti {
+public interface Tiedonsaanti<T> {
 
-    <T> Collection<T> haeTiedot(Filtteri<T> filtteri, Class<T> clazz);
+    Collection<T> haeTiedot(Filtteri<T> filtteri, Class<T> clazz);
 
-    <T> void lisaaTieto(T... lisattavat);
+    void lisaaTieto(T... lisattavat);
 
     public void tallenna() throws IOException;
 
     public void lataa() throws IOException;
+
+    public static class ParseException extends RuntimeException {
+
+        public ParseException(String string) {
+            super(string);
+        }
+    }
 }
