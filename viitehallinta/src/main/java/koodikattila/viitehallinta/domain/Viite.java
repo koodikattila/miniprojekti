@@ -18,6 +18,7 @@ public class Viite {
     private String avain;
 
     public Viite(ViiteTyyppi tyyppi) {
+        avain = "";
         this.tyyppi = tyyppi;
         this.attribuutit = new EnumMap<>(Attribuutti.class);
     }
