@@ -4,6 +4,7 @@
  */
 package koodikattila.viitehallinta.gui;
 
+import java.io.File;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.table.AbstractTableModel;
@@ -12,6 +13,7 @@ import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
 import koodikattila.viitehallinta.hallinta.Kontrolleri;
+import koodikattila.viitehallinta.tieto.JsonTiedonsaanti;
 
 /**
  *
@@ -23,7 +25,7 @@ public class Gui extends javax.swing.JFrame {
      * Creates new form Gui
      */
     public Gui() {
-        this.kontrolleri = new Kontrolleri();
+        this.kontrolleri = new Kontrolleri(new JsonTiedonsaanti(new File("viitehallinta.json")));
         initComponents();
     }
 
