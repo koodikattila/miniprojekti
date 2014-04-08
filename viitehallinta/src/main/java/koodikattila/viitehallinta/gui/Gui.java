@@ -36,7 +36,10 @@ public class Gui extends javax.swing.JFrame {
             
             @Override
             public String getColumnName(int col) {
-                return sarakkeet.get(col).toString();
+                if (col == 0) {
+                    return "avain";
+                }
+                return sarakkeet.get(col-1).toString();
             }
 
             @Override
@@ -51,17 +54,23 @@ public class Gui extends javax.swing.JFrame {
 
             @Override
             public Object getValueAt(int row, int col) {
-                return viitteet.get(row).haeArvo(sarakkeet.get(col));
+                if (col == 0) {
+                    return viitteet.get(row).getAvain();
+                }
+                return viitteet.get(row).haeArvo(sarakkeet.get(col-1));
             }
 
             @Override
             public boolean isCellEditable(int row, int col) {
+                if (col == 0) {
+                    return false;
+                }
                 return true;
             }
 
             @Override
             public void setValueAt(Object value, int row, int col) {
-                viitteet.get(row).asetaArvo(sarakkeet.get(col), (String)value);
+                viitteet.get(row).asetaArvo(sarakkeet.get(col-1), (String)value);
             }
         };
 
