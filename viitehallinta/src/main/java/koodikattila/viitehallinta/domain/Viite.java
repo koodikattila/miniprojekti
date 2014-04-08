@@ -16,11 +16,28 @@ public class Viite {
     private Set<Attribuutti> asetetutAttribuutit;
     private ViiteTyyppi tyyppi;
     private Map<Attribuutti, String> attribuutit;
+    private String avain;
 
     public Viite(ViiteTyyppi tyyppi) {
         this.tyyppi = tyyppi;
         this.attribuutit = new EnumMap<>(Attribuutti.class);
         this.asetetutAttribuutit = new HashSet<Attribuutti>();
+    }
+
+    /**
+     * Hakee tämän viitteen avaimen.
+     * @return avain
+     */
+    public String getAvain() {
+        return avain;
+    }
+
+    /**
+     * Asettaa tämän viitteen avaimen.
+     * @param avain 
+     */
+    public void setAvain(String avain) {
+        this.avain = avain;
     }
 
     /*
