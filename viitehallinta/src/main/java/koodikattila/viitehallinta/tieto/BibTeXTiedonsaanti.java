@@ -27,13 +27,7 @@ public class BibTeXTiedonsaanti implements Tiedonsaanti<Viite> {
 
     @Override
     public Collection<Viite> haeTiedot(Filtteri filtteri, Class clazz) {
-        Collection<Viite> oliot = new ArrayList<>();
-        for (Viite olio : tiedot) {
-            if (clazz.isAssignableFrom(olio.getClass()) && filtteri.testaa(olio)) {
-                oliot.add(olio);
-            }
-        }
-        return oliot;
+        return tiedot;
     }
 
     @Override
@@ -78,5 +72,10 @@ public class BibTeXTiedonsaanti implements Tiedonsaanti<Viite> {
     private String luoString(Viite tieto) {
         //TODO
         return null;
+    }
+
+    @Override
+    public void close() throws IOException {
+        tallenna();
     }
 }

@@ -72,4 +72,9 @@ public class JsonTiedonsaanti implements Tiedonsaanti<Viite> {
         }
         tiedosto.createNewFile();
     }
+
+    @Override
+    public void close() throws IOException {
+        tallenna();
+    }
 }
