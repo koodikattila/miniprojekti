@@ -91,4 +91,18 @@ public class Viite {
         return this.tyyppi;
     }
 
+    // TODO: tagien vertailu
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) return false;
+        if(!(obj instanceof Viite)) return false;
+        Viite v = (Viite) obj;
+        if(!avain.equals(v.getAvain())) return false;
+        if(!attribuutit.equals(v.asetetutAttribuutit())) return false;
+        return true;
+    }
+    
+    
+    
+
 }
