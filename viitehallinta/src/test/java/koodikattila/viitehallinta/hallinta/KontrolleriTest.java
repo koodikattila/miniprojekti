@@ -30,7 +30,7 @@ public class KontrolleriTest {
 
     private Kontrolleri kontrolleri;
     private ArrayList<Viite> lista;
-    private Tiedonsaanti tiedonsaanti = new Tiedonsaanti<Viite>() {
+    private final Tiedonsaanti tiedonsaanti = new Tiedonsaanti<Viite>() {
 
         @Override
         public Collection<Viite> haeTiedot(Filtteri<Viite> filtteri, Class<Viite> clazz) {
@@ -49,6 +49,10 @@ public class KontrolleriTest {
 
         @Override
         public void lataa() throws IOException {
+        }
+
+        @Override
+        public void close() throws IOException {
         }
     };
 
