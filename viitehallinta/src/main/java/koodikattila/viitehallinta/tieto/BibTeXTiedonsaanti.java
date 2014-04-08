@@ -1,6 +1,5 @@
 package koodikattila.viitehallinta.tieto;
 
-import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,21 +14,19 @@ import koodikattila.viitehallinta.domain.Viite;
  *
  * @author Koodikattila
  */
-public class JsonTiedonsaanti implements Tiedonsaanti<Viite> {
+public class BibTeXTiedonsaanti implements Tiedonsaanti<Viite> {
 
-    private final Collection<Viite> tiedot;
-    private final Gson json;
     private final File tiedosto;
+    private final Collection<Viite> tiedot;
     private final String kirjainjarjestelma = "UTF-8";
 
-    public JsonTiedonsaanti(File tiedosto) {
-        this.json = new Gson();
-        this.tiedot = new ArrayList<>();
+    public BibTeXTiedonsaanti(File tiedosto) {
         this.tiedosto = tiedosto;
+        this.tiedot = new ArrayList<>();
     }
 
     @Override
-    public Collection<Viite> haeTiedot(Filtteri<Viite> filtteri, Class<Viite> clazz) {
+    public Collection<Viite> haeTiedot(Filtteri filtteri, Class clazz) {
         Collection<Viite> oliot = new ArrayList<>();
         for (Viite olio : tiedot) {
             if (clazz.isAssignableFrom(olio.getClass()) && filtteri.testaa(olio)) {
@@ -48,8 +45,8 @@ public class JsonTiedonsaanti implements Tiedonsaanti<Viite> {
     public void tallenna() throws IOException {
         varmistaTiedosto();
         try (Writer kirjoittaja = new FileWriter(tiedosto)) {
-            for (Object tieto : tiedot) {
-                kirjoittaja.write(json.toJson(tieto) + "\n");
+            for (Viite tieto : tiedot) {
+                kirjoittaja.write(luoString(tieto) + "\n");
             }
         }
     }
@@ -60,7 +57,7 @@ public class JsonTiedonsaanti implements Tiedonsaanti<Viite> {
         tiedot.clear();
         try (Scanner lukija = new Scanner(tiedosto, kirjainjarjestelma)) {
             while (lukija.hasNextLine()) {
-                tiedot.add(json.fromJson(lukija.nextLine(), Viite.class));
+                tiedot.add(parse(lukija.nextLine()));
             }
         }
     }
@@ -71,5 +68,15 @@ public class JsonTiedonsaanti implements Tiedonsaanti<Viite> {
             vanhempi.mkdirs();
         }
         tiedosto.createNewFile();
+    }
+
+    private Viite parse(String string) {
+        //TODO
+        return null;
+    }
+
+    private String luoString(Viite tieto) {
+        //TODO
+        return null;
     }
 }
