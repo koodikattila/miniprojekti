@@ -28,12 +28,12 @@ public class Kontrolleri {
         this.viitteet = new ArrayList<>();
         tiedosto = new File("viitehallinta.json");
         if (tiedosto.exists())
-            this.populoiLista();
+            populoiLista();
         //TODO: fetchaa viitteet tiedostosta
     }
     
     private void populoiLista() {
-        Tiedonsaanti t = new JsonTiedonsaanti(tiedosto);
+        Tiedonsaanti<Viite> t = new JsonTiedonsaanti<Viite>(tiedosto);
         t.haeTiedot(null, null);
         Viite v1 = new Viite(ViiteTyyppi.book);
         v1.asetaArvo(Attribuutti.author, "kerola");
