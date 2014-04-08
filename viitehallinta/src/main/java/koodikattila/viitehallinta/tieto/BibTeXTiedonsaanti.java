@@ -27,7 +27,13 @@ public class BibTeXTiedonsaanti implements Tiedonsaanti<Viite> {
 
     @Override
     public Collection<Viite> haeTiedot(Filtteri filtteri, Class clazz) {
-        return tiedot;
+        Collection<Viite> oliot = new ArrayList<>();
+        for (Viite olio : tiedot) {
+            if (clazz.isAssignableFrom(olio.getClass()) && filtteri.testaa(olio)) {
+                oliot.add(olio);
+            }
+        }
+        return oliot;
     }
 
     @Override

@@ -32,7 +32,7 @@ public class JsonTiedonsaanti implements Tiedonsaanti<Viite> {
     public Collection<Viite> haeTiedot(Filtteri<Viite> filtteri, Class<Viite> clazz) {
         Collection<Viite> oliot = new ArrayList<>();
         for (Viite olio : tiedot) {
-            if (filtteri.testaa(olio)) {
+            if (clazz.isAssignableFrom(olio.getClass()) && filtteri.testaa(olio)) {
                 oliot.add(olio);
             }
         }
