@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Scanner;
+import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 
 /**
@@ -27,7 +28,13 @@ public class BibTeXTiedonsaanti implements Tiedonsaanti<Viite> {
 
     @Override
     public Collection<Viite> haeTiedot(Filtteri filtteri, Class clazz) {
-        return tiedot;
+        Collection<Viite> oliot = new ArrayList<>();
+        for (Viite olio : tiedot) {
+            if (clazz.isAssignableFrom(olio.getClass()) && filtteri.testaa(olio)) {
+                oliot.add(olio);
+            }
+        }
+        return oliot;
     }
 
     @Override
@@ -70,8 +77,18 @@ public class BibTeXTiedonsaanti implements Tiedonsaanti<Viite> {
     }
 
     private String luoString(Viite tieto) {
-        //TODO
-        return null;
+        StringBuilder rakentaja = new StringBuilder();
+        rakentaja.append("@").append(tieto.getTyyppi()).append("{").append(tieto.getAvain()).append(",").append("\n");
+        for (Attribuutti attribuutti : tieto.asetetutAttribuutit()) {
+            rakentaja.append(" ").append(attribuutti);
+            int maara = Attribuutti.maksimiPituus() - attribuutti.toString().length() + 1;
+            for (int n = 0; n < maara; n++) {
+                rakentaja.append(" ");
+            }
+            rakentaja.append("= ").append(tieto.haeArvo(attribuutti)).append(",\n");
+        }
+        rakentaja.setLength(rakentaja.length() - 2);
+        return rakentaja.append("}").toString();
     }
 
     @Override
