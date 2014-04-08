@@ -15,10 +15,27 @@ public class Viite {
     private List<String> tagit;
     private ViiteTyyppi tyyppi;
     private Map<Attribuutti, String> attribuutit;
+    private String avain;
 
     public Viite(ViiteTyyppi tyyppi) {
         this.tyyppi = tyyppi;
         this.attribuutit = new EnumMap<>(Attribuutti.class);
+    }
+
+    /**
+     * Hakee tämän viitteen avaimen.
+     * @return avain
+     */
+    public String getAvain() {
+        return avain;
+    }
+
+    /**
+     * Asettaa tämän viitteen avaimen.
+     * @param avain 
+     */
+    public void setAvain(String avain) {
+        this.avain = avain;
     }
 
     /*
