@@ -13,14 +13,12 @@ import java.util.Set;
 public class Viite {
 
     private List<String> tagit;
-    private Set<Attribuutti> asetetutAttribuutit;
     private ViiteTyyppi tyyppi;
     private Map<Attribuutti, String> attribuutit;
 
     public Viite(ViiteTyyppi tyyppi) {
         this.tyyppi = tyyppi;
         this.attribuutit = new EnumMap<>(Attribuutti.class);
-        this.asetetutAttribuutit = new HashSet<Attribuutti>();
     }
 
     /*
@@ -30,10 +28,8 @@ public class Viite {
     public void asetaArvo(Attribuutti attr, String arvo) {
         if (arvo.isEmpty()) {
             this.attribuutit.remove(attr);
-            this.asetetutAttribuutit.remove(attr);
         } else {
             this.attribuutit.put(attr, arvo);
-            this.asetetutAttribuutit.add(attr);
         }
     }
 
@@ -71,7 +67,7 @@ public class Viite {
     }
     
     public Set<Attribuutti> asetetutAttribuutit() {
-        return this.asetetutAttribuutit;
+        return this.attribuutit.keySet();
     }
     
     public ViiteTyyppi getTyyppi() {
