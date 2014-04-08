@@ -6,11 +6,14 @@
 
 package koodikattila.viitehallinta.hallinta;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
+import koodikattila.viitehallinta.tieto.JsonTiedonsaanti;
+import koodikattila.viitehallinta.tieto.Tiedonsaanti;
 
 /**
  *
@@ -19,14 +22,19 @@ import koodikattila.viitehallinta.domain.ViiteTyyppi;
 public class Kontrolleri {
     private final List<Viite> viitteet;
     private List<Viite> viimeksiHaetut;
+    private final File tiedosto;
     
     public Kontrolleri() {
         this.viitteet = new ArrayList<>();
-        //this.populoiLista();
+        tiedosto = new File("viitehallinta.json");
+        if (tiedosto.exists())
+            this.populoiLista();
         //TODO: fetchaa viitteet tiedostosta
     }
     
     private void populoiLista() {
+        Tiedonsaanti t = new JsonTiedonsaanti(tiedosto);
+        t.haeTiedot(null, null);
         Viite v1 = new Viite(ViiteTyyppi.book);
         v1.asetaArvo(Attribuutti.author, "kerola");
         v1.asetaArvo(Attribuutti.title, "titoilua");
