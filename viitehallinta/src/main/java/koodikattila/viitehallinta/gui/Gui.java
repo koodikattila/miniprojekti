@@ -7,6 +7,8 @@ package koodikattila.viitehallinta.gui;
 import java.io.File;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 import koodikattila.viitehallinta.domain.Attribuutti;
@@ -30,18 +32,18 @@ public class Gui extends javax.swing.JFrame {
     }
 
     public void paivitaTaulukko() {
-        
+
         TableModel model = new AbstractTableModel() {
-            
+
             List<Attribuutti> sarakkeet = ((ViiteTyyppi) jList1.getSelectedValue()).haePakolliset();
-            List<Viite> viitteet = kontrolleri.hae((ViiteTyyppi)jList1.getSelectedValue(), "");
-            
+            List<Viite> viitteet = kontrolleri.hae((ViiteTyyppi) jList1.getSelectedValue(), "");
+
             @Override
             public String getColumnName(int col) {
                 if (col == 0) {
                     return "avain";
                 }
-                return sarakkeet.get(col-1).toString();
+                return sarakkeet.get(col - 1).toString();
             }
 
             @Override
@@ -59,7 +61,7 @@ public class Gui extends javax.swing.JFrame {
                 if (col == 0) {
                     return viitteet.get(row).getAvain();
                 }
-                return viitteet.get(row).haeArvo(sarakkeet.get(col-1));
+                return viitteet.get(row).haeArvo(sarakkeet.get(col - 1));
             }
 
             @Override
@@ -72,7 +74,7 @@ public class Gui extends javax.swing.JFrame {
 
             @Override
             public void setValueAt(Object value, int row, int col) {
-                viitteet.get(row).asetaArvo(sarakkeet.get(col-1), (String)value);
+                viitteet.get(row).asetaArvo(sarakkeet.get(col - 1), (String) value);
             }
         };
 
@@ -95,8 +97,10 @@ public class Gui extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Viitehallinta");
 
         jList1.setModel(new DefaultListModel<ViiteTyyppi>());
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -139,6 +143,13 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setText("Vie bibtex-tiedostoon ...");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tallennaNappiaPainettu(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -152,7 +163,8 @@ public class Gui extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE))
                     .addComponent(jTextField1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)))
@@ -170,7 +182,8 @@ public class Gui extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
                 .addContainerGap())
         );
 
@@ -194,12 +207,30 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_lisaaNappiaPainettu
 
     private void poistaNappiaPainettu(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_poistaNappiaPainettu
-        if (this.jTable1.getSelectedRow()<0) {
+        if (this.jTable1.getSelectedRow() < 0) {
             return;
         }
         kontrolleri.poista(this.jTable1.getSelectedRow());
         this.paivitaTaulukko();
     }//GEN-LAST:event_poistaNappiaPainettu
+
+    private void tallennaNappiaPainettu(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tallennaNappiaPainettu
+        JFileChooser saveFile = new JFileChooser();
+        saveFile.setDialogTitle("Tallenna bibtex-tiedostoon");
+        int retval = saveFile.showSaveDialog(null);
+        File file = saveFile.getSelectedFile();
+        if (retval != JFileChooser.APPROVE_OPTION || file == null) {
+            return;
+        }
+        if (file.exists()) {
+            int retval1 = JOptionPane.showConfirmDialog(this, "Tiedosto on jo olemassa, kirjoitetaanko yli?", "Tiedosto on jo olemassa", JOptionPane.YES_NO_OPTION);
+            if (retval1 != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
+        }
+        System.out.println("Tallennetaan tiedostoon " + file.getAbsolutePath());
+        //TODO: kutsu bibtex-tiedontalletusrajapintaa
+    }//GEN-LAST:event_tallennaNappiaPainettu
 
 //    /**
 //     * @param args the command line arguments
@@ -235,12 +266,12 @@ public class Gui extends javax.swing.JFrame {
 //            }
 //        });
 //    }
-
     private Kontrolleri kontrolleri;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
