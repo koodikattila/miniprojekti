@@ -85,7 +85,7 @@ public class BibTeXTiedonsaanti implements Tiedonsaanti<Viite> {
             for (int n = 0; n < maara; n++) {
                 rakentaja.append(" ");
             }
-            rakentaja.append("= ").append(tieto.haeArvo(attribuutti)).append(",\n");
+            rakentaja.append("= \"").append(tieto.haeArvo(attribuutti)).append("\",\n");
         }
         rakentaja.setLength(rakentaja.length() - 2);
         return rakentaja.append("}").toString();
