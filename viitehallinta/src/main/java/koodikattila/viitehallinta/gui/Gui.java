@@ -27,7 +27,7 @@ public class Gui extends javax.swing.JFrame {
      * Creates new form Gui
      */
     public Gui() {
-        this.kontrolleri = new Kontrolleri(new JsonTiedonsaanti());
+        this.kontrolleri = new Kontrolleri();
         initComponents();
     }
 
@@ -65,9 +65,9 @@ public class Gui extends javax.swing.JFrame {
 
             @Override
             public boolean isCellEditable(int row, int col) {
-                if (col == 0) {
-                    return false;
-                }
+//                if (col == 0) {
+//                    return false;
+//                }
                 return true;
             }
 
@@ -232,6 +232,7 @@ public class Gui extends javax.swing.JFrame {
             }
         }
         System.out.println("Tallennetaan tiedostoon " + file.getAbsolutePath());
+        kontrolleri.talletaBibtexTiedostoon(file);
         //TODO: kutsu bibtex-tiedontalletusrajapintaa
     }//GEN-LAST:event_tallennaNappiaPainettu
 //    /**

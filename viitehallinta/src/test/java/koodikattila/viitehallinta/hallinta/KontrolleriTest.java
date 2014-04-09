@@ -128,7 +128,7 @@ public class KontrolleriTest {
             @Override
             public void lataa(File tiedosto) throws IOException {
             }
-        });
+        }, null, null);
         assertEquals(lista, kontrolleri.getViitteet());
     }
 }
