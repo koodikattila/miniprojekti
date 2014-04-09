@@ -4,7 +4,6 @@
  */
 package koodikattila.viitehallinta.gui;
 
-import java.io.File;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.table.AbstractTableModel;
@@ -25,23 +24,23 @@ public class Gui extends javax.swing.JFrame {
      * Creates new form Gui
      */
     public Gui() {
-        this.kontrolleri = new Kontrolleri(new JsonTiedonsaanti(new File("viitehallinta.json")));
+        this.kontrolleri = new Kontrolleri(new JsonTiedonsaanti());
         initComponents();
     }
 
     public void paivitaTaulukko() {
-        
+
         TableModel model = new AbstractTableModel() {
-            
+
             List<Attribuutti> sarakkeet = ((ViiteTyyppi) jList1.getSelectedValue()).haePakolliset();
-            List<Viite> viitteet = kontrolleri.hae((ViiteTyyppi)jList1.getSelectedValue(), "");
-            
+            List<Viite> viitteet = kontrolleri.hae((ViiteTyyppi) jList1.getSelectedValue(), "");
+
             @Override
             public String getColumnName(int col) {
                 if (col == 0) {
                     return "avain";
                 }
-                return sarakkeet.get(col-1).toString();
+                return sarakkeet.get(col - 1).toString();
             }
 
             @Override
@@ -59,7 +58,7 @@ public class Gui extends javax.swing.JFrame {
                 if (col == 0) {
                     return viitteet.get(row).getAvain();
                 }
-                return viitteet.get(row).haeArvo(sarakkeet.get(col-1));
+                return viitteet.get(row).haeArvo(sarakkeet.get(col - 1));
             }
 
             @Override
@@ -72,7 +71,7 @@ public class Gui extends javax.swing.JFrame {
 
             @Override
             public void setValueAt(Object value, int row, int col) {
-                viitteet.get(row).asetaArvo(sarakkeet.get(col-1), (String)value);
+                viitteet.get(row).asetaArvo(sarakkeet.get(col - 1), (String) value);
             }
         };
 
@@ -194,7 +193,7 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_lisaaNappiaPainettu
 
     private void poistaNappiaPainettu(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_poistaNappiaPainettu
-        if (this.jTable1.getSelectedRow()<0) {
+        if (this.jTable1.getSelectedRow() < 0) {
             return;
         }
         kontrolleri.poista(this.jTable1.getSelectedRow());
@@ -208,7 +207,7 @@ public class Gui extends javax.swing.JFrame {
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
 //        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
 //         */
 //        try {
 //            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -235,7 +234,6 @@ public class Gui extends javax.swing.JFrame {
 //            }
 //        });
 //    }
-
     private Kontrolleri kontrolleri;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

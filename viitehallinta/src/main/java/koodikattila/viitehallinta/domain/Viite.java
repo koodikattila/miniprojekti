@@ -1,7 +1,6 @@
 package koodikattila.viitehallinta.domain;
 
 import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +24,7 @@ public class Viite {
 
     /**
      * Hakee tämän viitteen avaimen.
+     *
      * @return avain
      */
     public String getAvain() {
@@ -33,7 +33,8 @@ public class Viite {
 
     /**
      * Asettaa tämän viitteen avaimen.
-     * @param avain 
+     *
+     * @param avain
      */
     public void setAvain(String avain) {
         this.avain = avain;
@@ -66,7 +67,7 @@ public class Viite {
     /*
      * onkoValidi() -metodi palauttaa true, jos tällä viiteoliolla on asetettu kaikki viitteen
      * tyypille spesifioidut pakolliset kentät, ja muussa tapauksessa false
-     * 
+     *
      */
 
     public boolean onkoValidi() {
@@ -83,27 +84,23 @@ public class Viite {
         }
         return true;
     }
-    
+
     public Set<Attribuutti> asetetutAttribuutit() {
         return this.attribuutit.keySet();
     }
-    
+
     public ViiteTyyppi getTyyppi() {
         return this.tyyppi;
     }
 
-    // TODO: tagien vertailu
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == null) return false;
-        if(!(obj instanceof Viite)) return false;
-        Viite v = (Viite) obj;
-        if(!avain.equals(v.getAvain())) return false;
-        if(!attribuutit.equals(v.asetetutAttribuutit())) return false;
-        return true;
-    }
-    
-    
-    
-
+//    // TODO: tagien vertailu
+//    @Override
+//    public boolean equals(Object obj) {
+//        if(obj == null) return false;
+//        if(!(obj instanceof Viite)) return false;
+//        Viite v = (Viite) obj;
+//        if(!avain.equals(v.getAvain())) return false;
+//        if(!attribuutit.equals(v.asetetutAttribuutit())) return false;
+//        return true;
+//    }
 }

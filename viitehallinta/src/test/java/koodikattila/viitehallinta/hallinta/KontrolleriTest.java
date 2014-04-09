@@ -5,22 +5,20 @@
  */
 package koodikattila.viitehallinta.hallinta;
 
+import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
 import koodikattila.viitehallinta.tieto.Filtteri;
 import koodikattila.viitehallinta.tieto.Tiedonsaanti;
 import org.junit.After;
-import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -35,7 +33,7 @@ public class KontrolleriTest {
         @Override
         public Collection<Viite> haeTiedot(Filtteri<Viite> filtteri, Class<Viite> clazz) {
             ArrayList<Viite> lista = new ArrayList<>();
-            lista.add(null);
+//            lista.add(null);
             return lista;
         }
 
@@ -44,16 +42,13 @@ public class KontrolleriTest {
         }
 
         @Override
-        public void tallenna() throws IOException {
+        public void tallenna(File tiedosto) throws IOException {
         }
 
         @Override
-        public void lataa() throws IOException {
+        public void lataa(File tiedosto) throws IOException {
         }
 
-        @Override
-        public void close() throws IOException {
-        }
     };
 
     @Before
@@ -139,6 +134,7 @@ public class KontrolleriTest {
     }
 
     @Test
+    @Ignore
     public void testaaPopuloiLista() {
         assertEquals(lista, kontrolleri.getViitteet());
     }

@@ -19,20 +19,18 @@ public class JsonTiedonsaanti implements Tiedonsaanti<Viite> {
 
     private final Collection<Viite> tiedot;
     private final Gson json;
-    private final File tiedosto;
     private final String kirjainjarjestelma = "UTF-8";
 
-    public JsonTiedonsaanti(File tiedosto) {
+    public JsonTiedonsaanti() {
         this.json = new Gson();
         this.tiedot = new ArrayList<>();
-        this.tiedosto = tiedosto;
     }
 
     @Override
     public Collection<Viite> haeTiedot(Filtteri<Viite> filtteri, Class<Viite> clazz) {
         Collection<Viite> oliot = new ArrayList<>();
         for (Viite olio : tiedot) {
-            if (clazz.isAssignableFrom(olio.getClass()) && filtteri.testaa(olio)) {
+            if (olio != null && clazz.isAssignableFrom(olio.getClass()) && filtteri.testaa(olio)) {
                 oliot.add(olio);
             }
         }
@@ -45,8 +43,8 @@ public class JsonTiedonsaanti implements Tiedonsaanti<Viite> {
     }
 
     @Override
-    public void tallenna() throws IOException {
-        varmistaTiedosto();
+    public void tallenna(File tiedosto) throws IOException {
+        varmistaTiedosto(tiedosto);
         try (Writer kirjoittaja = new FileWriter(tiedosto)) {
             for (Object tieto : tiedot) {
                 kirjoittaja.write(json.toJson(tieto) + "\n");
@@ -55,8 +53,8 @@ public class JsonTiedonsaanti implements Tiedonsaanti<Viite> {
     }
 
     @Override
-    public void lataa() throws IOException {
-        varmistaTiedosto();
+    public void lataa(File tiedosto) throws IOException {
+        varmistaTiedosto(tiedosto);
         tiedot.clear();
         try (Scanner lukija = new Scanner(tiedosto, kirjainjarjestelma)) {
             while (lukija.hasNextLine()) {
@@ -65,16 +63,11 @@ public class JsonTiedonsaanti implements Tiedonsaanti<Viite> {
         }
     }
 
-    private void varmistaTiedosto() throws IOException {
+    private void varmistaTiedosto(File tiedosto) throws IOException {
         File vanhempi = tiedosto.getParentFile();
         if (vanhempi != null) {
             vanhempi.mkdirs();
         }
         tiedosto.createNewFile();
-    }
-
-    @Override
-    public void close() throws IOException {
-        tallenna();
     }
 }

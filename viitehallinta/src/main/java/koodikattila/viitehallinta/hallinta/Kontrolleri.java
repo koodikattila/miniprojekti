@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package koodikattila.viitehallinta.hallinta;
 
 import java.io.File;
@@ -17,7 +16,6 @@ import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
 import koodikattila.viitehallinta.tieto.Filtteri;
-import koodikattila.viitehallinta.tieto.JsonTiedonsaanti;
 import koodikattila.viitehallinta.tieto.Tiedonsaanti;
 
 /**
@@ -25,50 +23,55 @@ import koodikattila.viitehallinta.tieto.Tiedonsaanti;
  * @author mikko
  */
 public class Kontrolleri {
+
     private final List<Viite> viitteet;
     private List<Viite> viimeksiHaetut;
     private Tiedonsaanti tiedonsaanti;
-    
+    private File tiedosto;
+
     public Kontrolleri(Tiedonsaanti tiedonsaanti) {
         this();
         this.tiedonsaanti = tiedonsaanti;
     }
-    
+
     public Kontrolleri() {
-        this.viitteet = new ArrayList<>();
-        if(tiedonsaanti != null)
+        tiedosto = new File("viitehallinta.json");
+        viitteet = new ArrayList<>();
+        if (tiedonsaanti != null) {
             populoiLista();
+        }
         //TODO: fetchaa viitteet tiedostosta
     }
-    
+
     private void populoiLista() {
         try {
-            tiedonsaanti.lataa();
+            tiedonsaanti.lataa(tiedosto);
         } catch (IOException ex) {
             Logger.getLogger(Kontrolleri.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Collection<Viite> tiedot = tiedonsaanti.haeTiedot(new Filtteri<Viite>(){
-            
+        Collection<Viite> tiedot = tiedonsaanti.haeTiedot(new Filtteri<Viite>() {
+
             @Override
             public boolean testaa(Viite testattava) {
                 return true;
             }
         }, Viite.class);
-        if (tiedot == null)
+        if (tiedot == null) {
             return;
-        for(Viite viite : tiedot) {
+        }
+        for (Viite viite : tiedot) {
             viitteet.add(viite);
         }
     }
-    
+
     public void lisaaViite(Viite lisattava) {
         this.viitteet.add(lisattava);
     }
-    
+
     public List<Viite> getViitteet() {
         return this.viitteet;
     }
-    
+
     public List<Viite> hae(ViiteTyyppi tyyppi, String hakusana) {
         List<Viite> palautus = new ArrayList<>();
         for (Viite v : this.viitteet) {
@@ -88,10 +91,10 @@ public class Kontrolleri {
         this.viimeksiHaetut = palautus;
         return palautus;
     }
-    
+
     /*
-    * Poistaa viitteen järjestelmästä parametrina annetun indeksin perusteella viimeksi haettujen listasta
-    */
+     * Poistaa viitteen järjestelmästä parametrina annetun indeksin perusteella viimeksi haettujen listasta
+     */
     public void poista(int indeksi) {
         if (this.viimeksiHaetut == null) {
             return;
@@ -99,5 +102,5 @@ public class Kontrolleri {
         this.viitteet.remove(this.viimeksiHaetut.get(indeksi));
         this.viimeksiHaetut.remove(this.viimeksiHaetut.get(indeksi));
     }
-    
+
 }
