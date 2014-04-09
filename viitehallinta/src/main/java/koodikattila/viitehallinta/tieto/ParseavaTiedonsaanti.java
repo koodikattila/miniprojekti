@@ -12,6 +12,7 @@ import java.util.Scanner;
 /**
  *
  * @author Koodikattila
+ * @param <T>
  */
 public abstract class ParseavaTiedonsaanti<T> implements Tiedonsaanti<T> {
 
@@ -68,7 +69,13 @@ public abstract class ParseavaTiedonsaanti<T> implements Tiedonsaanti<T> {
         tiedosto.createNewFile();
     }
 
+    @Override
+    public void tyhjenna() {
+        tiedot.clear();
+    }
+
     public abstract void lueTiedot(Scanner lukija, Collection<T> tiedot);
 
     public abstract void kirjoitaTieto(Writer kirjoittaja, T tieto) throws IOException;
+
 }
