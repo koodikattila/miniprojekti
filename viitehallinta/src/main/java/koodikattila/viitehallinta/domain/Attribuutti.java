@@ -31,5 +31,19 @@ public enum Attribuutti {
     type,
     url,
     volume,
-    year
+    year;
+
+    private static int maksimiPituus;
+
+    public static int maksimiPituus() {
+        if (maksimiPituus == Integer.MIN_VALUE) {
+            for (Attribuutti attribuutti : Attribuutti.values()) {
+                int pituus = attribuutti.toString().length();
+                if (maksimiPituus < pituus) {
+                    maksimiPituus = pituus;
+                }
+            }
+        }
+        return maksimiPituus;
+    }
 }
