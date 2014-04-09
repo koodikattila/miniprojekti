@@ -66,15 +66,19 @@ public class Gui extends javax.swing.JFrame {
 
             @Override
             public boolean isCellEditable(int row, int col) {
-                if (col == 0) {
-                    return false;
-                }
+//                if (col == 0) {
+//                    return false;
+//                }
                 return true;
             }
 
             @Override
             public void setValueAt(Object value, int row, int col) {
-                viitteet.get(row).asetaArvo(sarakkeet.get(col - 1), (String) value);
+                if (col == 0) {
+                    viitteet.get(row).setAvain((String) value);
+                } else {
+                    viitteet.get(row).asetaArvo(sarakkeet.get(col - 1), (String) value);
+                }
             }
         };
 
