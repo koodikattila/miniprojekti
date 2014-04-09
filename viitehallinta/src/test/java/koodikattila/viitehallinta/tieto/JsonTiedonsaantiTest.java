@@ -40,7 +40,7 @@ public class JsonTiedonsaantiTest {
 
     @After
     public void tearDown() {
-//        testiTiedosto.delete();
+        testiTiedosto.delete();
     }
 
     @Test

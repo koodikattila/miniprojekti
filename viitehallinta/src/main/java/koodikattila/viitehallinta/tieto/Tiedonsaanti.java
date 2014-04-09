@@ -44,6 +44,11 @@ public interface Tiedonsaanti<T> {
      */
     public void lataa(File tiedosto) throws IOException;
 
+    /**
+     * Tyhjentää tiedot
+     */
+    public void tyhjenna();
+
     public static class ParseException extends RuntimeException {
 
         public ParseException(String string) {

@@ -33,7 +33,7 @@ public enum Attribuutti {
     volume,
     year;
 
-    private static int maksimiPituus;
+    private static int maksimiPituus = Integer.MIN_VALUE;
 
     public static int maksimiPituus() {
         if (maksimiPituus == Integer.MIN_VALUE) {

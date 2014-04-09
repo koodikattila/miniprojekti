@@ -35,6 +35,6 @@ public class BibTeXTiedonsaanti extends ParseavaTiedonsaanti<Viite> {
             rakentaja.append("= \"").append(tieto.haeArvo(attribuutti)).append("\",\n");
         }
         rakentaja.setLength(rakentaja.length() - 2);
-        kirjoittaja.write(rakentaja.append("\n}").toString());
+        kirjoittaja.write(rakentaja.append("\n}\n").toString());
     }
 }
