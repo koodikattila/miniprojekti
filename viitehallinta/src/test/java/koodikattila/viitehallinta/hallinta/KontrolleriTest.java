@@ -125,7 +125,7 @@ public class KontrolleriTest {
             @Override
             public void kirjoitaTieto(Writer kirjoittaja, Viite tieto) throws IOException {
             }
-        });
+        }, null, null);
         assertEquals(lista, kontrolleri.getViitteet());
     }
 }

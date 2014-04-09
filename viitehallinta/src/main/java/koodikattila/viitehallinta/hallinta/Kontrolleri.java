@@ -10,7 +10,9 @@ import java.util.logging.Logger;
 import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
+import koodikattila.viitehallinta.tieto.BibTeXTiedonsaanti;
 import koodikattila.viitehallinta.tieto.Filtteri;
+import koodikattila.viitehallinta.tieto.JsonTiedonsaanti;
 import koodikattila.viitehallinta.tieto.Tiedonsaanti;
 
 /**
@@ -21,30 +23,31 @@ public class Kontrolleri {
 
     private final List<Viite> viitteet;
     private List<Viite> viimeksiHaetut;
-    private Tiedonsaanti tiedonsaanti;
+    private Tiedonsaanti jsonTiedonsaanti;
+    private Tiedonsaanti bibtexTiedonsaanti;
     private File tiedosto;
 
-    public Kontrolleri(Tiedonsaanti tiedonsaanti) {
-        this();
-        this.tiedonsaanti = tiedonsaanti;
-        if (tiedonsaanti != null) {
+    public Kontrolleri(Tiedonsaanti json, Tiedonsaanti bibtex, File tiedosto) {
+        this.viitteet = new ArrayList<>();
+        this.jsonTiedonsaanti = json;
+        this.bibtexTiedonsaanti = bibtex;
+        this.tiedosto = tiedosto;
+        if (json != null) {
             populoiLista();
         }
     }
 
     public Kontrolleri() {
-        this.viitteet = new ArrayList<>();
-        tiedosto = new File("viitehallinta.json");
-        //TODO: fetchaa viitteet tiedostosta
+        this(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("viitehallinta.json"));
     }
 
     private void populoiLista() {
         try {
-            tiedonsaanti.lataa(tiedosto);
+            jsonTiedonsaanti.lataa(tiedosto);
         } catch (IOException ex) {
             Logger.getLogger(Kontrolleri.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Collection<Viite> tiedot = tiedonsaanti.haeTiedot(new Filtteri<Viite>() {
+        Collection<Viite> tiedot = jsonTiedonsaanti.haeTiedot(new Filtteri<Viite>() {
 
             @Override
             public boolean testaa(Viite testattava) {
@@ -108,6 +111,15 @@ public class Kontrolleri {
         }
         this.viitteet.remove(this.viimeksiHaetut.get(indeksi));
         this.viimeksiHaetut.remove(this.viimeksiHaetut.get(indeksi));
+    }
+    
+    public void talletaBibtexTiedostoon(File tiedosto) {
+        try {
+            bibtexTiedonsaanti.lisaaTieto(viitteet.toArray());
+            bibtexTiedonsaanti.tallenna(tiedosto);
+        } catch (IOException ex) {
+            System.err.println("Tiedostovika");
+        }
     }
 
 }
