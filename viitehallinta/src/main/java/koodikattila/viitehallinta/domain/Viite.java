@@ -71,13 +71,10 @@ public class Viite {
      */
 
     public boolean onkoValidi() {
-        List<Attribuutti> pakollisetAttribuutit = tyyppi.haePakolliset();
-        if (attribuutit.keySet().isEmpty()) {
-            if (!pakollisetAttribuutit.isEmpty()) {
-                return false;
-            }
+        if (this.avain == null || this.avain.isEmpty()) {
+            return false;
         }
-        for (Attribuutti attribuutti : attribuutit.keySet()) {
+        for (Attribuutti attribuutti : tyyppi.haePakolliset()) {
             if (!attribuutit.containsKey(attribuutti)) {
                 return false;
             }

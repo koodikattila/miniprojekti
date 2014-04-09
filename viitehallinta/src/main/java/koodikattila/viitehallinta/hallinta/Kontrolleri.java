@@ -113,6 +113,13 @@ public class Kontrolleri {
         this.viimeksiHaetut.remove(this.viimeksiHaetut.get(indeksi));
     }
     
+    public boolean onkoValidi(int indeksi) {
+        if (this.viimeksiHaetut == null) {
+            return true;
+        }
+        return this.viimeksiHaetut.get(indeksi).onkoValidi();
+    }
+    
     public void talletaBibtexTiedostoon(File tiedosto) {
         try {
             bibtexTiedonsaanti.tyhjenna();

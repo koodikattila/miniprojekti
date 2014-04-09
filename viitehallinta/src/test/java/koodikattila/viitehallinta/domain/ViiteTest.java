@@ -52,6 +52,7 @@ public class ViiteTest {
     @Test
     public void testOnkoKirjaOikeillaArvoillaValidi() {
         //author, title, publisher, year
+        viite.setAvain("abc123");
         viite.asetaArvo(Attribuutti.author, "fsjd");
         viite.asetaArvo(Attribuutti.title, "kjkf");
         viite.asetaArvo(Attribuutti.publisher, "df");

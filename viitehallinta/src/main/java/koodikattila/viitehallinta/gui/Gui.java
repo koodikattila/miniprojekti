@@ -4,12 +4,16 @@
  */
 package koodikattila.viitehallinta.gui;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.io.File;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
@@ -30,8 +34,17 @@ public class Gui extends javax.swing.JFrame {
         this.kontrolleri = new Kontrolleri();
         initComponents();
     }
+    
+    public boolean onkoValid(int rivi) {
+        return kontrolleri.onkoValidi(rivi);
+    }
 
     public void paivitaTaulukko() {
+        //System.out.println("paivitaTaulukko");
+        //System.out.println(new Exception().getStackTrace()[1]);
+        if (jList1.getSelectedValue() == null) {
+            return;
+        }
 
         TableModel model = new AbstractTableModel() {
             List<Attribuutti> sarakkeet = ((ViiteTyyppi) jList1.getSelectedValue()).haePakolliset();
@@ -52,7 +65,7 @@ public class Gui extends javax.swing.JFrame {
 
             @Override
             public int getColumnCount() {
-                return sarakkeet.size();
+                return sarakkeet.size()+1;
             }
 
             @Override
@@ -97,7 +110,23 @@ public class Gui extends javax.swing.JFrame {
         jList1 = new javax.swing.JList();
         jTextField1 = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTable1 = new JTable() {
+
+            public Component prepareRenderer(
+                TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                if (!onkoValid(row)) {
+                    c.setBackground(Color.RED);
+                } else {
+                    c.setBackground(Color.WHITE);
+                }
+                //if (!isRowSelected(row)) {
+                    //c.setBackground(Color.yellow);
+                    //c.setFont(row == 0 ? font : getFont());
+                    //}
+                return c;
+            }
+        };
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
@@ -122,6 +151,12 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jScrollPane2MouseClicked(evt);
+            }
+        });
+
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -130,6 +165,11 @@ public class Gui extends javax.swing.JFrame {
 
             }
         ));
+        jTable1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jTable1PropertyChange(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable1);
 
         jButton1.setText("Lisää uusi");
@@ -233,8 +273,17 @@ public class Gui extends javax.swing.JFrame {
         }
         System.out.println("Tallennetaan tiedostoon " + file.getAbsolutePath());
         kontrolleri.talletaBibtexTiedostoon(file);
-        //TODO: kutsu bibtex-tiedontalletusrajapintaa
     }//GEN-LAST:event_tallennaNappiaPainettu
+
+    private void jTable1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTable1PropertyChange
+        this.jTable1.repaint();
+    }//GEN-LAST:event_jTable1PropertyChange
+
+    private void jScrollPane2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane2MouseClicked
+        if (this.jTable1.getCellEditor() != null ) {
+        this.jTable1.getCellEditor().stopCellEditing();
+        }      
+    }//GEN-LAST:event_jScrollPane2MouseClicked
 //    /**
 //     * @param args the command line arguments
 //     */

@@ -7,7 +7,6 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
-    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -99,6 +98,9 @@
       </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jScrollPane2MouseClicked"/>
+      </Events>
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
       </AuxValues>
@@ -138,6 +140,12 @@
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="jTable1PropertyChange"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JTable() {&#xa;&#xa;        public Component prepareRenderer(&#xa;                TableCellRenderer renderer, int row, int column) {&#xa;            Component c = super.prepareRenderer(renderer, row, column);&#xa;            if (!onkoValid(row)) {&#xa;                c.setBackground(Color.RED);&#xa;            } else {&#xa;                c.setBackground(Color.WHITE);&#xa;            }&#xa;            //if (!isRowSelected(row)) {&#xa;                //c.setBackground(Color.yellow);&#xa;                //c.setFont(row == 0 ? font : getFont());&#xa;            //}&#xa;            return c;&#xa;        }&#xa;    };"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
