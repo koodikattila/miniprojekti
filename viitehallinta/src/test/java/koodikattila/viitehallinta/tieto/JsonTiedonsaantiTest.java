@@ -23,12 +23,6 @@ public class JsonTiedonsaantiTest {
 
     private Tiedonsaanti<Viite> tiedonsaanti;
     private File testiTiedosto;
-    private Filtteri<Viite> kaikki = new Filtteri<Viite>() {
-        @Override
-        public boolean testaa(Viite testattava) {
-            return true;
-        }
-    };
     private final Filtteri<Viite> sisaltaaA = new Filtteri<Viite>() {
         @Override
         public boolean testaa(Viite testattava) {
@@ -40,7 +34,7 @@ public class JsonTiedonsaantiTest {
     public void setUp() throws Exception {
         testiTiedosto = new File("testiTiedosto");
         AA.asetaArvo(Attribuutti.author, "XD");
-        tiedonsaanti = new JsonTiedonsaanti(testiTiedosto);
+        tiedonsaanti = new JsonTiedonsaanti();
         tiedonsaanti.lisaaTieto(A, B, AA);
     }
 
@@ -51,17 +45,17 @@ public class JsonTiedonsaantiTest {
 
     @Test
     public void testHaeTiedot() {
-        Collection<Viite> stringit = tiedonsaanti.haeTiedot(sisaltaaA, Viite.class);
-        assertTrue(stringit.contains(A));
-        assertTrue(stringit.contains(AA));
+        Collection<Viite> tiedot = tiedonsaanti.haeTiedot(sisaltaaA, Viite.class);
+        assertTrue(tiedot.contains(A));
+        assertTrue(tiedot.contains(AA));
     }
 
     @Test
     public void testTallenna() throws Exception {
-        Collection<Viite> viitteet1 = tiedonsaanti.haeTiedot(kaikki, Viite.class);
-        tiedonsaanti.tallenna();
-        tiedonsaanti.lataa();
-        Collection<Viite> viitteet2 = tiedonsaanti.haeTiedot(kaikki, Viite.class);
+        Collection<Viite> viitteet1 = tiedonsaanti.haeTiedot(Filtteri.KAIKKI, Viite.class);
+        tiedonsaanti.tallenna(testiTiedosto);
+        tiedonsaanti.lataa(testiTiedosto);
+        Collection<Viite> viitteet2 = tiedonsaanti.haeTiedot(Filtteri.KAIKKI, Viite.class);
         for (Viite viite : viitteet1) {
             boolean flag = false;
             for (Viite viite2 : viitteet2) {
