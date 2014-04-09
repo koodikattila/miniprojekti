@@ -115,6 +115,7 @@ public class Kontrolleri {
     
     public void talletaBibtexTiedostoon(File tiedosto) {
         try {
+            bibtexTiedonsaanti.tyhjenna();
             bibtexTiedonsaanti.lisaaTieto(viitteet.toArray());
             bibtexTiedonsaanti.tallenna(tiedosto);
         } catch (IOException ex) {
