@@ -34,7 +34,6 @@ public class Gui extends javax.swing.JFrame {
     public void paivitaTaulukko() {
 
         TableModel model = new AbstractTableModel() {
-
             List<Attribuutti> sarakkeet = ((ViiteTyyppi) jList1.getSelectedValue()).haePakolliset();
             List<Viite> viitteet = kontrolleri.hae((ViiteTyyppi) jList1.getSelectedValue(), "");
 
@@ -66,9 +65,9 @@ public class Gui extends javax.swing.JFrame {
 
             @Override
             public boolean isCellEditable(int row, int col) {
-//                if (col == 0) {
-//                    return false;
-//                }
+                if (col == 0) {
+                    return false;
+                }
                 return true;
             }
 
@@ -235,7 +234,6 @@ public class Gui extends javax.swing.JFrame {
         System.out.println("Tallennetaan tiedostoon " + file.getAbsolutePath());
         //TODO: kutsu bibtex-tiedontalletusrajapintaa
     }//GEN-LAST:event_tallennaNappiaPainettu
-
 //    /**
 //     * @param args the command line arguments
 //     */
@@ -271,7 +269,6 @@ public class Gui extends javax.swing.JFrame {
 //        });
 //    }
     private Kontrolleri kontrolleri;
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

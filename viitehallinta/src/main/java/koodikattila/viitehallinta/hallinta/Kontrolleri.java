@@ -60,6 +60,17 @@ public class Kontrolleri {
             viitteet.add(viite);
         }
     }
+    /**
+     * Tarkistaa annetusta viiteavaimesta onko jo jollain aiemmalla viitteellä sama avain
+     * @param viiteavain
+     * @return true jos avain on uniikki, muuten false
+     */
+    public boolean onkoViiteavainUniikki(String viiteavain){
+        for (Viite v : viitteet) {
+            if (v.getAvain().equalsIgnoreCase(viiteavain)) return false;
+        }
+        return true;
+    }
     
     public void lisaaViite(Viite lisattava) {
         this.viitteet.add(lisattava);
