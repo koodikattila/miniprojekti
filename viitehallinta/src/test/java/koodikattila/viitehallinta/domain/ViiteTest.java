@@ -77,5 +77,9 @@ public class ViiteTest {
         result.add(Attribuutti.year);
         assertEquals(result, viite.asetetutAttribuutit());
     }
-
+    @Test
+    public void asetaArvoPoistaaJosArvoOnTyhja() {
+        viite.asetaArvo(Attribuutti.author, "");
+        assertTrue("".equals(viite.haeArvo(Attribuutti.author)));
+    }
 }
