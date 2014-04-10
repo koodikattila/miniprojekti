@@ -47,13 +47,7 @@ public class Kontrolleri {
         } catch (IOException ex) {
             Logger.getLogger(Kontrolleri.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Collection<Viite> tiedot = jsonTiedonsaanti.haeTiedot(new Filtteri<Viite>() {
-
-            @Override
-            public boolean testaa(Viite testattava) {
-                return true;
-            }
-        }, Viite.class);
+        Collection<Viite> tiedot = jsonTiedonsaanti.haeTiedot(Filtteri.KAIKKI, Viite.class);
         if (tiedot == null) {
             return;
         }
@@ -63,17 +57,21 @@ public class Kontrolleri {
     }
 
     /**
-     * Tarkistaa annetusta viiteavaimesta onko jo jollain aiemmalla viitteellä sama avain
+     * Tarkistaa annetusta viiteavaimesta onko jo jollain aiemmalla viitteellä
+     * sama avain
+     *
      * @param viiteavain
      * @return true jos avain on uniikki, muuten false
      */
-    public boolean onkoViiteavainUniikki(String viiteavain){
+    public boolean onkoViiteavainUniikki(String viiteavain) {
         for (Viite v : viitteet) {
-            if (v.getAvain().equalsIgnoreCase(viiteavain)) return false;
+            if (v.getAvain().equalsIgnoreCase(viiteavain)) {
+                return false;
+            }
         }
         return true;
     }
-    
+
     public void lisaaViite(Viite lisattava) {
         this.viitteet.add(lisattava);
     }
@@ -112,14 +110,14 @@ public class Kontrolleri {
         this.viitteet.remove(this.viimeksiHaetut.get(indeksi));
         this.viimeksiHaetut.remove(this.viimeksiHaetut.get(indeksi));
     }
-    
+
     public boolean onkoValidi(int indeksi) {
         if (this.viimeksiHaetut == null) {
             return true;
         }
         return this.viimeksiHaetut.get(indeksi).onkoValidi();
     }
-    
+
     public void talletaBibtexTiedostoon(File tiedosto) {
         try {
             bibtexTiedonsaanti.tyhjenna();
@@ -127,6 +125,16 @@ public class Kontrolleri {
             bibtexTiedonsaanti.tallenna(tiedosto);
         } catch (IOException ex) {
             System.err.println("Tiedostovika");
+        }
+    }
+
+    public void tallenna() {
+        jsonTiedonsaanti.tyhjenna();
+        jsonTiedonsaanti.lisaaTieto(viitteet.toArray());
+        try {
+            jsonTiedonsaanti.tallenna(tiedosto);
+        } catch (IOException ex) {
+            Logger.getLogger(Kontrolleri.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

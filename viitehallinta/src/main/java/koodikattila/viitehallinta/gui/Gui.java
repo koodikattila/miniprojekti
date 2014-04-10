@@ -133,6 +133,11 @@ public class Gui extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Viitehallinta");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jList1.setModel(new DefaultListModel<ViiteTyyppi>());
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -284,6 +289,10 @@ public class Gui extends javax.swing.JFrame {
         this.jTable1.getCellEditor().stopCellEditing();
         }      
     }//GEN-LAST:event_jScrollPane2MouseClicked
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        kontrolleri.tallenna();
+    }//GEN-LAST:event_formWindowClosing
 //    /**
 //     * @param args the command line arguments
 //     */
