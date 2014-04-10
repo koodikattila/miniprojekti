@@ -1,5 +1,6 @@
 package koodikattila.viitehallinta.hallinta;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
 import koodikattila.viitehallinta.tieto.Filtteri;
 import koodikattila.viitehallinta.tieto.ParseavaTiedonsaanti;
+import koodikattila.viitehallinta.tieto.Tiedonsaanti;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -27,7 +29,7 @@ public class KontrolleriTest {
 
     @Before
     public void setUp() {
-        this.kontrolleri = new Kontrolleri();
+        this.kontrolleri = new Kontrolleri(null, null, null);
     }
 
     @After
