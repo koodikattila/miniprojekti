@@ -3,7 +3,7 @@ miniprojekti
 
 ohtu-kurssin miniprojekti
 
-[Jenkins CI](http://ohtu.jamo.io/job/koodikattila-viitehallinta/)
+[Jenkins CI](http://ohtu.jamo.io/view/miniprojektit/job/koodikattila-miniprojekti/)
 
 [Backlog](https://docs.google.com/spreadsheet/ccc?key=0Aj07Hv7MfQm4dDFIVURucHNiZUhpbVFlTUI1OGtrTFE&usp=sharing)
 
