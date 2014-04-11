@@ -7,6 +7,7 @@ package koodikattila.viitehallinta.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
@@ -47,8 +48,17 @@ public class Gui extends javax.swing.JFrame {
         }
 
         TableModel model = new AbstractTableModel() {
-            List<Attribuutti> sarakkeet = ((ViiteTyyppi) jList1.getSelectedValue()).haePakolliset();
+            List<Attribuutti> sarakkeet = haeSarakkeet();
             List<Viite> viitteet = kontrolleri.hae((ViiteTyyppi) jList1.getSelectedValue(), "");
+            
+            private List<Attribuutti> haeSarakkeet() {
+                List<Attribuutti> pakolliset = ((ViiteTyyppi) jList1.getSelectedValue()).haePakolliset();
+                List<Attribuutti> valinnaiset = ((ViiteTyyppi) jList1.getSelectedValue()).haeValinnaiset();
+                List<Attribuutti> palautus = new ArrayList<>();
+                palautus.addAll(pakolliset);
+                palautus.addAll(valinnaiset);
+                return palautus;
+            }
 
             @Override
             public String getColumnName(int col) {
