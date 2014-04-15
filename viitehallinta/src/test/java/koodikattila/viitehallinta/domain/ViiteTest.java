@@ -78,9 +78,39 @@ public class ViiteTest {
         result.add(Attribuutti.year);
         assertEquals(result, viite.asetetutAttribuutit());
     }
+
     @Test
     public void asetaArvoPoistaaJosArvoOnTyhja() {
         viite.asetaArvo(Attribuutti.author, "");
         assertTrue("".equals(viite.haeArvo(Attribuutti.author)));
+    }
+
+    @Test
+    public void lisaaTagiEiOleTyhja() {
+        assertTrue(viite.haeTagit().isEmpty());
+        
+        viite.lisaaTagi("abc");
+        assertFalse(viite.haeTagit().isEmpty());
+    }
+
+    @Test
+    public void lisaaTagiPoistaaJosTagiOnTyhja() {
+        viite.lisaaTagi("abc");
+        viite.poistaTagi("abc");
+        assertEquals(0, viite.haeTagit().size());
+    }
+
+    @Test
+    public void haeTagiEiOleTyhja() {
+        assertTrue(viite.haeTagit().isEmpty());
+        viite.lisaaTagi("abc");
+        assertFalse(viite.haeTagit().isEmpty());
+    }
+
+    @Test
+    public void lisaaTagi() {
+        assertTrue(viite.haeTagit().isEmpty());
+        viite.lisaaTagi("abc");
+        assertTrue(viite.tagitSisaltaa("abc"));
     }
 }

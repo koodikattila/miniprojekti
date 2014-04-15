@@ -1,7 +1,7 @@
 package koodikattila.viitehallinta.domain;
 
 import java.util.EnumMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,19 +11,20 @@ import java.util.Set;
  */
 public class Viite {
 
-    private List<String> tagit;
-    private ViiteTyyppi tyyppi;
-    private Map<Attribuutti, String> attribuutit;
+    private final Set<String> tagit;
+    private final ViiteTyyppi tyyppi;
+    private final Map<Attribuutti, String> attribuutit;
     private String avain;
 
     public Viite(ViiteTyyppi tyyppi) {
         avain = "";
         this.tyyppi = tyyppi;
         this.attribuutit = new EnumMap<>(Attribuutti.class);
+        tagit = new HashSet<>();
     }
 
     /**
-     * Hakee tämän viitteen avaimen.
+     * Hakee viitteen avaimen.
      *
      * @return avain
      */
@@ -32,7 +33,7 @@ public class Viite {
     }
 
     /**
-     * Asettaa tämän viitteen avaimen.
+     * Asettaa viitteen avaimen.
      *
      * @param avain
      */
@@ -64,12 +65,12 @@ public class Viite {
         }
         return "";
     }
+
     /*
      * onkoValidi() -metodi palauttaa true, jos tällä viiteoliolla on asetettu kaikki viitteen
      * tyypille spesifioidut pakolliset kentät, ja muussa tapauksessa false
      *
      */
-
     public boolean onkoValidi() {
         if (this.avain == null || this.avain.isEmpty()) {
             return false;
@@ -88,6 +89,22 @@ public class Viite {
 
     public ViiteTyyppi getTyyppi() {
         return this.tyyppi;
+    }
+
+    public void lisaaTagi(String tagi) {
+        tagit.add(tagi);
+    }
+    
+    public Set<String> haeTagit() {
+        return tagit;
+    }
+    
+    public boolean tagitSisaltaa(String str) {
+        return tagit.contains(str);
+    }
+
+    public void poistaTagi(String tagi) {
+        tagit.remove(tagi);
     }
 
     // TODO: tagien vertailu
