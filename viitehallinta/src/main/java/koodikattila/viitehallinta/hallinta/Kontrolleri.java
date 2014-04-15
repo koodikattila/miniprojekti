@@ -72,6 +72,7 @@ public class Kontrolleri {
         return true;
     }
 
+
     public void lisaaViite(Viite lisattava) {
         this.viitteet.add(lisattava);
     }
