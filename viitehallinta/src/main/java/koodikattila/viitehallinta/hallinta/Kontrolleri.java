@@ -64,22 +64,15 @@ public class Kontrolleri {
      * @return true jos avain on uniikki, muuten false
      */
     public boolean onkoViiteavainUniikki(final String viiteavain) {
-        return jsonTiedonsaanti.haeTiedot(new Filtteri<Viite>(){
-            @Override
-            public boolean testaa(Viite testattava) {
-                return testattava.getAvain().equalsIgnoreCase(viiteavain);
+        for (Viite v : viitteet) {
+            if (v.getAvain().equalsIgnoreCase(viiteavain)) {
+                return false;
             }
-        }, Viite.class).isEmpty();
-//        for (Viite v : viitteet) {
-//            if (v.getAvain().equalsIgnoreCase(viiteavain)) {
-//                return false;
-//            }
-//        }
-//        return true;
+        }
+        return true;
     }
 
     public void lisaaViite(Viite lisattava) {
-        jsonTiedonsaanti.lisaaTieto(lisattava);
         this.viitteet.add(lisattava);
     }
 
