@@ -16,9 +16,10 @@ description 'Järjestelmään pystyy lisäämään uuden viitteen'
 scenario "Viitteen lisääminen järjestelmään onnistuu, kun annetaan kaikki vaaditut tiedot", {
     given 'Yritetään lisätä uusi viite', {
         //palautetaan tiedosto alkutilaan
-        alkutila = new String("{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\"author1\",\"journal\":\"journal1\",\"title\":\"title1\",\"year\":\"year1\"},\"avain\":\"avain1\"}\n"
-        + "{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\" author2\",\"journal\":\" journal2\",\"title\":\" title2\",\"year\":\" year2\"},\"avain\":\"avain2\"}\n"
-        + "{\"tyyppi\":\"book\",\"attribuutit\":{\"author\":\" author3\",\"publisher\":\" publisher3\",\"title\":\" title3 \",\"year\":\" year3\"},\"avain\":\"avain3\"}\n");
+//        alkutila = new String("{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\"author1\",\"journal\":\"journal1\",\"title\":\"title1\",\"year\":\"year1\"},\"avain\":\"avain1\"}\n"
+//        + "{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\" author2\",\"journal\":\" journal2\",\"title\":\" title2\",\"year\":\" year2\"},\"avain\":\"avain2\"}\n"
+//        + "{\"tyyppi\":\"book\",\"attribuutit\":{\"author\":\" author3\",\"publisher\":\" publisher3\",\"title\":\" title3 \",\"year\":\" year3\"},\"avain\":\"avain3\"}\n");
+    alkutila = new String("");
         try {
             kirjoittaja = new FileWriter(new File("test.json"));
 
@@ -36,12 +37,12 @@ scenario "Viitteen lisääminen järjestelmään onnistuu, kun annetaan kaikki v
         k.hae(ViiteTyyppi.article, "");
         k.lisaaViite(new Viite(ViiteTyyppi.article));
         List<Viite> viitteet = k.hae(ViiteTyyppi.article, "");
-        viitteet.get(2).setAvain("article_uusi");
+        viitteet.get(0).setAvain("article_uusi");
 
-        viitteet.get(2).asetaArvo(Attribuutti.author, "author_uusi");
-        viitteet.get(2).asetaArvo(Attribuutti.publisher, "publisher_uusi");
-        viitteet.get(2).asetaArvo(Attribuutti.title, "title_uusi");
-        viitteet.get(2).asetaArvo(Attribuutti.year, "year_uusi");
+        viitteet.get(0).asetaArvo(Attribuutti.author, "author_uusi");
+        viitteet.get(0).asetaArvo(Attribuutti.publisher, "publisher_uusi");
+        viitteet.get(0).asetaArvo(Attribuutti.title, "title_uusi");
+        viitteet.get(0).asetaArvo(Attribuutti.year, "year_uusi");
 
         k.tallenna();
         
@@ -55,11 +56,22 @@ scenario "Viitteen lisääminen järjestelmään onnistuu, kun annetaan kaikki v
 
         }
         
-        haluttu = new String("{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\"author1\",\"journal\":\"journal1\",\"title\":\"title1\",\"year\":\"year1\"},\"avain\":\"avain1\"}\n"
-                + "{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\" author2\",\"journal\":\" journal2\",\"title\":\" title2\",\"year\":\" year2\"},\"avain\":\"avain2\"}\n"
-                + "{\"tyyppi\":\"book\",\"attribuutit\":{\"author\":\" author3\",\"publisher\":\" publisher3\",\"title\":\" title3 \",\"year\":\" year3\"},\"avain\":\"avain3\"}\n"
-                + "{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\"author_uusi\",\"publisher\":\"publisher_uusi\",\"title\":\"title_uusi\",\"year\":\"year_uusi\"},\"avain\":\"article_uusi\"}\n");
+//        haluttu = new String("{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\"author1\",\"journal\":\"journal1\",\"title\":\"title1\",\"year\":\"year1\"},\"avain\":\"avain1\"}\n"
+//                + "{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\" author2\",\"journal\":\" journal2\",\"title\":\" title2\",\"year\":\" year2\"},\"avain\":\"avain2\"}\n"
+//                + "{\"tyyppi\":\"book\",\"attribuutit\":{\"author\":\" author3\",\"publisher\":\" publisher3\",\"title\":\" title3 \",\"year\":\" year3\"},\"avain\":\"avain3\"}\n"
+//                + "{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\"author_uusi\",\"publisher\":\"publisher_uusi\",\"title\":\"title_uusi\",\"year\":\"year_uusi\"},\"avain\":\"article_uusi\"}\n");
 
+        haluttu = new String("{\"tagit\":[],\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\"author_uusi\",\"publisher\":\"publisher_uusi\",\"title\":\"title_uusi\",\"year\":\"year_uusi\"},\"avain\":\"article_uusi\"}\n");
+//        System.out.println(teksti.length() + " " + haluttu.length());
+//        for(i = 0; i < haluttu.length(); i++){
+//            if(teksti.charAt(i) != haluttu.charAt(i)){
+//                System.out.println(i + ": " + haluttu.charAt(i) + " -> " +teksti.charAt(i));
+//            }
+//        }
+//        System.out.println("alku");
+//        System.out.println(haluttu + "|");
+//        System.out.println(teksti + "|");
+//        System.out.println("loppu");
         teksti.equals(haluttu).shouldBe(true);
         //"kissa".equals("kissa").shouldBe(true);
     }
