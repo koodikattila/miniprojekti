@@ -76,3 +76,42 @@ scenario "Viitteen lisääminen järjestelmään onnistuu, kun annetaan kaikki v
         //"kissa".equals("kissa").shouldBe(true);
     }
 }
+
+scenario "Viite tallentuu järjestelmään, vaikka kaikkia vaadittuja tietoja ei ole vielä annettu", {
+    given 'Aletaan lisämään uutta viitettä', {
+        //palautetaan tiedosto alkutilaan
+    alkutila = new String("");
+        try {
+            kirjoittaja = new FileWriter(new File("test.json"));
+
+            kirjoittaja.write(alkutila);
+            kirjoittaja.close();
+        } catch (IOException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+
+    }
+    when 'Viitteelle annetaan joitakin tietoja', {
+        
+        k.hae(ViiteTyyppi.article, "");
+        k.lisaaViite(new Viite(ViiteTyyppi.article));
+        List<Viite> viitteet = k.hae(ViiteTyyppi.article, "");
+        viitteet.get(0).setAvain("article_uusi");
+        viitteet.get(0).asetaArvo(Attribuutti.author, "author_uusi");
+        k.tallenna();
+        
+    }
+    then 'Viite tallentuu järjestelmään', {
+        //tiedoston lukeminen stringiksi
+        teksti = null;
+        try {
+            teksti = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(Files.readAllBytes(Paths.get("test.json")))).toString();
+        } catch (IOException ex) {
+
+        }
+        haluttu = new String("{\"tagit\":[],\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\"author_uusi\"},\"avain\":\"article_uusi\"}\n");
+        teksti.equals(haluttu).shouldBe(true);
+    }
+}
