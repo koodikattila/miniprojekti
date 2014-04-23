@@ -1,7 +1,10 @@
 package koodikattila.viitehallinta.domain;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,19 +43,41 @@ public class Viite {
     public void setAvain(String avain) {
         this.avain = avain;
     }
-    public String sukunimet(String kirjoittajat) {
-        String sn = "";
-        
-        return sn;
+    
+    private List<String> nimet(String kirjoittajat) {
+        return Arrays.asList(kirjoittajat.split(" and "));
     }
-    public String generoiViiteavain() {
+    
+    private String etuosa(List<String> nimet) {
+        String etuosa = "";
+        if(nimet.size() > 1) {
+            for (String nimi : nimet) {
+            etuosa = etuosa.concat(nimi.substring(0, 1));
+            }
+        }
+        else etuosa = etuosa.concat(nimet.get(0).substring(0, 2));
+        return etuosa;
+    }
+    
+    public void generoiViiteavain() {
         String avain = "";
+        String kirjoittaja;
+        String vuosiluku;
             if (this.getTyyppi() == ViiteTyyppi.book 
                     || this.getTyyppi() == ViiteTyyppi.article 
                     || this.getTyyppi() == ViiteTyyppi.inproceedings) {
-                avain.concat("");
+                if (attribuutit.containsKey(Attribuutti.author)) {
+                    kirjoittaja = attribuutit.get(Attribuutti.author);
+                }
+                else kirjoittaja = "aaaaaaa and bbbbbb and ccccc";
+                if (attribuutit.containsKey(Attribuutti.year)) {
+                    vuosiluku = attribuutit.get(Attribuutti.year);
+                }
+                else vuosiluku = "0000";
+                avain = avain.concat(etuosa(nimet(kirjoittaja))) + vuosiluku.substring(vuosiluku.length() - 2);
             }
-        return avain;
+            
+        this.setAvain(avain);
     }
     /*
      * Asettaa viiteoliolle parametrina annetun attribuutin arvoksi
