@@ -40,7 +40,20 @@ public class Viite {
     public void setAvain(String avain) {
         this.avain = avain;
     }
-
+    public String sukunimet(String kirjoittajat) {
+        String sn = "";
+        
+        return sn;
+    }
+    public String generoiViiteavain() {
+        String avain = "";
+            if (this.getTyyppi() == ViiteTyyppi.book 
+                    || this.getTyyppi() == ViiteTyyppi.article 
+                    || this.getTyyppi() == ViiteTyyppi.inproceedings) {
+                avain.concat("");
+            }
+        return avain;
+    }
     /*
      * Asettaa viiteoliolle parametrina annetun attribuutin arvoksi
      * parametrina annetun arvon.

@@ -370,6 +370,7 @@ public class Gui extends javax.swing.JFrame {
         if (this.jTable1.getSelectedRow() < 0) {
             return;
         }
+        //viitteet.remove(this.jTable1.getSelectedRow());
         kontrolleri.poista(this.jTable1.getSelectedRow());
         this.paivitaTaulukko();
     }//GEN-LAST:event_poistaNappiaPainettu
