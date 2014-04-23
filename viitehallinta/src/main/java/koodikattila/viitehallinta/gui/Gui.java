@@ -7,21 +7,15 @@ package koodikattila.viitehallinta.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
-import javax.swing.text.html.HTMLDocument;
-import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
 import koodikattila.viitehallinta.hallinta.Kontrolleri;
-import koodikattila.viitehallinta.tieto.JsonTiedonsaanti;
 
 /**
  *
@@ -48,63 +42,7 @@ public class Gui extends javax.swing.JFrame {
             return;
         }
 
-        TableModel model = new AbstractTableModel() {
-            List<Attribuutti> sarakkeet = haeSarakkeet();
-            List<Viite> viitteet = kontrolleri.hae((ViiteTyyppi) jList1.getSelectedValue(), "");
-            
-            private List<Attribuutti> haeSarakkeet() {
-                List<Attribuutti> pakolliset = ((ViiteTyyppi) jList1.getSelectedValue()).haePakolliset();
-                List<Attribuutti> valinnaiset = ((ViiteTyyppi) jList1.getSelectedValue()).haeValinnaiset();
-                List<Attribuutti> palautus = new ArrayList<>();
-                palautus.addAll(pakolliset);
-                palautus.addAll(valinnaiset);
-                return palautus;
-            }
-
-            @Override
-            public String getColumnName(int col) {
-                if (col == 0) {
-                    return "avain";
-                }
-                return sarakkeet.get(col - 1).toString();
-            }
-
-            @Override
-            public int getRowCount() {
-                return viitteet.size();
-            }
-
-            @Override
-            public int getColumnCount() {
-                return sarakkeet.size()+1;
-            }
-
-            @Override
-            public Object getValueAt(int row, int col) {
-                if (col == 0) {
-                    return viitteet.get(row).getAvain();
-                }
-                return viitteet.get(row).haeArvo(sarakkeet.get(col - 1));
-            }
-
-            @Override
-            public boolean isCellEditable(int row, int col) {
-//                if (col == 0) {
-//                    return false;
-//                }
-                return true;
-            }
-
-            @Override
-            public void setValueAt(Object value, int row, int col) {
-                if (col == 0) {
-                    viitteet.get(row).setAvain((String) value);
-                } else {
-                    viitteet.get(row).asetaArvo(sarakkeet.get(col - 1), (String) value);
-                }
-            }
-        };
-
+        TableModel model = new Taulukko(kontrolleri, (ViiteTyyppi) jList1.getSelectedValue());
         this.jTable1.setModel(model);
     }
 
@@ -249,6 +187,11 @@ public class Gui extends javax.swing.JFrame {
         });
 
         jButton5.setText("liitä");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("uuden tagin lisääminen:");
 
@@ -422,6 +365,10 @@ public class Gui extends javax.swing.JFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:        
+    }//GEN-LAST:event_jButton5ActionPerformed
 //    /**
 //     * @param args the command line arguments
 //     */
