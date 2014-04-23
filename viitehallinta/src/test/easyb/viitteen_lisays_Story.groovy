@@ -115,3 +115,42 @@ scenario "Viite tallentuu järjestelmään, vaikka kaikkia vaadittuja tietoja ei
         teksti.equals(haluttu).shouldBe(true);
     }
 }
+
+scenario "Järjestelmään tallentuu uusi tyhjä viite, jos mitään tietoja ei anneta", {
+    given 'Aletaan lisämään uutta viitettä', {
+        //palautetaan tiedosto alkutilaan
+    alkutila = new String("");
+        try {
+            kirjoittaja = new FileWriter(new File("test.json"));
+
+            kirjoittaja.write(alkutila);
+            kirjoittaja.close();
+        } catch (IOException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+
+    }
+    when 'Viitteelle ei anneta mitään tietoja', {
+        
+        k.hae(ViiteTyyppi.article, "");
+        k.lisaaViite(new Viite(ViiteTyyppi.article));
+        List<Viite> viitteet = k.hae(ViiteTyyppi.article, "");
+        //viitteet.get(0).setAvain("article_uusi");
+        //viitteet.get(0).asetaArvo(Attribuutti.author, "author_uusi");
+        k.tallenna();
+        
+    }
+    then 'Tyhjä viite tallentuu järjestelmään', {
+        //tiedoston lukeminen stringiksi
+        teksti = null;
+        try {
+            teksti = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(Files.readAllBytes(Paths.get("test.json")))).toString();
+        } catch (IOException ex) {
+
+        }
+        haluttu = new String("{\"tagit\":[],\"tyyppi\":\"article\",\"attribuutit\":{},\"avain\":\"\"}\n");
+        teksti.equals(haluttu).shouldBe(true);
+    }
+}
