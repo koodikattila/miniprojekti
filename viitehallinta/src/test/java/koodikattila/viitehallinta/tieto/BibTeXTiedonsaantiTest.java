@@ -18,14 +18,15 @@ import org.junit.Test;
 public class BibTeXTiedonsaantiTest {
 
     private Viite A = new Viite(ViiteTyyppi.article);
+    private Viitekokoelma kokoelma;
     private File testiTiedosto;
-    private Tiedonsaanti<Viite> tiedonsaanti;
-    private Filtteri<Viite> All;
+    private IO tiedonsaanti;
 
     @Before
     public void setUp() {
         testiTiedosto = new File("testiTiedosto");
-        tiedonsaanti = new BibTeXTiedonsaanti();
+        tiedonsaanti = new IO(new BibTeX());
+        kokoelma = new Viitekokoelma().lisaa(A);
         A.asetaArvo(Attribuutti.author, "XD");
     }
 
@@ -36,8 +37,7 @@ public class BibTeXTiedonsaantiTest {
 
     @Test
     public void attribuutillisenViitteenTallennus() throws IOException {
-        tiedonsaanti.lisaaTieto(A);
-        tiedonsaanti.tallenna(testiTiedosto);
+        tiedonsaanti.tallenna(testiTiedosto, kokoelma);
         String korrekti = "@article{,\n author = }";
         try (Scanner lukija = new Scanner(testiTiedosto)) {
             String luettu = "";

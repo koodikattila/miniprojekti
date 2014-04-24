@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package koodikattila.viitehallinta.gui;
 
 import java.awt.Color;
@@ -11,15 +7,20 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.ListModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
 import koodikattila.viitehallinta.hallinta.Kontrolleri;
 
 /**
  *
- * @author kumikumi
+ * @author Koodikattila
  */
 public class Gui extends javax.swing.JFrame {
 
@@ -30,7 +31,7 @@ public class Gui extends javax.swing.JFrame {
         this.kontrolleri = new Kontrolleri();
         initComponents();
     }
-    
+
     public boolean onkoValid(int rivi) {
         return kontrolleri.onkoValidi(rivi);
     }
@@ -38,12 +39,29 @@ public class Gui extends javax.swing.JFrame {
     public void paivitaTaulukko() {
         //System.out.println("paivitaTaulukko");
         //System.out.println(new Exception().getStackTrace()[1]);
-        if (jList1.getSelectedValue() == null) {
+        if (attribuuttiLista.getSelectedValue() == null) {
             return;
         }
+        TableModel model = new Taulukko(kontrolleri, attribuuttiLista.getSelectedValue().getTyyppi(), hakuKentta.getText());
+        this.viiteTaulukko.setModel(model);
+    }
 
-        TableModel model = new Taulukko(kontrolleri, (ViiteTyyppi) jList1.getSelectedValue());
-        this.jTable1.setModel(model);
+    private void tekstiMuuttunut(String teksti) {
+        ListModel<ViiteTyyppiSailo> modeli = attribuuttiLista.getModel();
+        if (teksti.isEmpty()) {
+            for (int i = 0; i < modeli.getSize(); i++) {
+                ViiteTyyppiSailo sailo = modeli.getElementAt(i);
+                sailo.nollaaMaara();
+                kontrolleri.hae(sailo.getTyyppi(), "");
+            }
+        } else {
+            for (int i = 0; i < modeli.getSize(); i++) {
+                ViiteTyyppiSailo sailo = modeli.getElementAt(i);
+                sailo.setMaara(kontrolleri.hae(sailo.getTyyppi(), teksti).size());
+            }
+        }
+        attribuuttiLista.repaint();
+        paivitaTaulukko();
     }
 
     /**
@@ -56,10 +74,10 @@ public class Gui extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
-        jTextField1 = new javax.swing.JTextField();
+        attribuuttiLista = new javax.swing.JList<ViiteTyyppiSailo>();
+        hakuKentta = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new JTable() {
+        viiteTaulukko = new JTable() {
 
             public Component prepareRenderer(
                 TableCellRenderer renderer, int row, int column) {
@@ -105,20 +123,51 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        jList1.setModel(new DefaultListModel<ViiteTyyppi>());
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        attribuuttiLista.setModel(new DefaultListModel<ViiteTyyppiSailo>());
+        attribuuttiLista.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        attribuuttiLista.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jList1ValueChanged(evt);
+                attribuuttiListaValueChanged(evt);
             }
         });
-        jScrollPane1.setViewportView(jList1);
-        this.jList1.setListData(ViiteTyyppi.values());
+        jScrollPane1.setViewportView(attribuuttiLista);
+        ViiteTyyppi[] arvot = ViiteTyyppi.values();
+        ViiteTyyppiSailo[] sailo = new ViiteTyyppiSailo[arvot.length];
+        for(int i = 0; i < arvot.length; i++){
+            sailo[i] = new ViiteTyyppiSailo(arvot[i]);
+        }
+        this.attribuuttiLista.setListData(sailo);
 
-        jTextField1.setText("filter");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        hakuKentta.setToolTipText("Filtteri");
+        hakuKentta.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+            public void removeUpdate(DocumentEvent e) {
+                muutettu(e);
+            }
+            public void insertUpdate(DocumentEvent e) {
+                muutettu(e);
+            }
+            private void muutettu(DocumentEvent e) {
+                Document dokumentti = e.getDocument();
+                try{
+                    tekstiMuuttunut(dokumentti.getText(0, dokumentti.getLength()));
+                }catch(BadLocationException ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
+        hakuKentta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                hakuKenttaActionPerformed(evt);
+            }
+        });
+        hakuKentta.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                tekstiMuuttunut(evt);
+            }
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
         });
 
@@ -128,7 +177,7 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        viiteTaulukko.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -136,12 +185,12 @@ public class Gui extends javax.swing.JFrame {
 
             }
         ));
-        jTable1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+        viiteTaulukko.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                jTable1PropertyChange(evt);
+                viiteTaulukkoPropertyChange(evt);
             }
         });
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(viiteTaulukko);
 
         jButton1.setText("Lisää uusi");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -245,7 +294,7 @@ public class Gui extends javax.swing.JFrame {
                                 .addComponent(jButton4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addComponent(jTextField1)
+                    .addComponent(hakuKentta)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -258,7 +307,7 @@ public class Gui extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(hakuKentta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -293,28 +342,27 @@ public class Gui extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void hakuKenttaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hakuKenttaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_hakuKenttaActionPerformed
 
-    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+    private void attribuuttiListaValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_attribuuttiListaValueChanged
         if (evt.getValueIsAdjusting()) {
             return;
         }
         this.paivitaTaulukko();
-    }//GEN-LAST:event_jList1ValueChanged
+    }//GEN-LAST:event_attribuuttiListaValueChanged
 
     private void lisaaNappiaPainettu(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lisaaNappiaPainettu
-        kontrolleri.lisaaViite(new Viite((ViiteTyyppi) jList1.getSelectedValue()));
+        kontrolleri.lisaaViite(new Viite(attribuuttiLista.getSelectedValue().getTyyppi()));
         this.paivitaTaulukko();
     }//GEN-LAST:event_lisaaNappiaPainettu
 
     private void poistaNappiaPainettu(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_poistaNappiaPainettu
-        if (this.jTable1.getSelectedRow() < 0) {
+        if (this.viiteTaulukko.getSelectedRow() < 0) {
             return;
         }
-        //viitteet.remove(this.jTable1.getSelectedRow());
-        kontrolleri.poista(this.jTable1.getSelectedRow());
+        kontrolleri.poista(this.viiteTaulukko.getSelectedRow());
         this.paivitaTaulukko();
     }//GEN-LAST:event_poistaNappiaPainettu
 
@@ -336,14 +384,14 @@ public class Gui extends javax.swing.JFrame {
         kontrolleri.talletaBibtexTiedostoon(file);
     }//GEN-LAST:event_tallennaNappiaPainettu
 
-    private void jTable1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTable1PropertyChange
-        this.jTable1.repaint();
-    }//GEN-LAST:event_jTable1PropertyChange
+    private void viiteTaulukkoPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_viiteTaulukkoPropertyChange
+        this.viiteTaulukko.repaint();
+    }//GEN-LAST:event_viiteTaulukkoPropertyChange
 
     private void jScrollPane2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane2MouseClicked
-        if (this.jTable1.getCellEditor() != null ) {
-        this.jTable1.getCellEditor().stopCellEditing();
-        }      
+        if (this.viiteTaulukko.getCellEditor() != null) {
+            this.viiteTaulukko.getCellEditor().stopCellEditing();
+        }
     }//GEN-LAST:event_jScrollPane2MouseClicked
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -367,8 +415,12 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:        
+        // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void tekstiMuuttunut(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_tekstiMuuttunut
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tekstiMuuttunut
 //    /**
 //     * @param args the command line arguments
 //     */
@@ -403,8 +455,10 @@ public class Gui extends javax.swing.JFrame {
 //            }
 //        });
 //    }
-    private Kontrolleri kontrolleri;
+    private final transient Kontrolleri kontrolleri;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList<ViiteTyyppiSailo> attribuuttiLista;
+    private javax.swing.JTextField hakuKentta;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -417,13 +471,11 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JTable viiteTaulukko;
     // End of variables declaration//GEN-END:variables
 }

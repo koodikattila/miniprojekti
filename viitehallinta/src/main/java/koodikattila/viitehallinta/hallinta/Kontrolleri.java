@@ -4,17 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
-import koodikattila.viitehallinta.tieto.BibTeXTiedonsaanti;
+import koodikattila.viitehallinta.tieto.BibTeX;
 import koodikattila.viitehallinta.tieto.Filtteri;
-import koodikattila.viitehallinta.tieto.JsonTiedonsaanti;
-import koodikattila.viitehallinta.tieto.Tiedonsaanti;
+import koodikattila.viitehallinta.tieto.IO;
+import koodikattila.viitehallinta.tieto.Json;
+import koodikattila.viitehallinta.tieto.Viitekokoelma;
 
 /**
  *
@@ -22,38 +23,32 @@ import koodikattila.viitehallinta.tieto.Tiedonsaanti;
  */
 public class Kontrolleri {
 
-    private final List<Viite> viitteet;
+    private final Viitekokoelma viitteet;
     private List<Viite> viimeksiHaetut;
-    private Tiedonsaanti jsonTiedonsaanti;
-    private Tiedonsaanti bibtexTiedonsaanti;
+    private IO json;
+    private IO bibtex;
     private File tiedosto;
 
-    public Kontrolleri(Tiedonsaanti json, Tiedonsaanti bibtex, File tiedosto) {
-        this.viitteet = new ArrayList<>();
-        this.jsonTiedonsaanti = json;
-        this.bibtexTiedonsaanti = bibtex;
+    public Kontrolleri(IO json, IO bibtex, File tiedosto) {
+        this.json = json;
+        this.bibtex = bibtex;
         this.tiedosto = tiedosto;
+        viimeksiHaetut = new ArrayList<>();
+        viitteet = new Viitekokoelma();
         if (json != null) {
             populoiLista();
         }
     }
 
     public Kontrolleri() {
-        this(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("viitehallinta.json"));
+        this(new IO(new Json()), new IO(new BibTeX()), new File("viitehallinta.json"));
     }
 
     private void populoiLista() {
         try {
-            jsonTiedonsaanti.lataa(tiedosto);
+            viitteet.lisaa(json.lataa(tiedosto));
         } catch (IOException ex) {
             Logger.getLogger(Kontrolleri.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Collection<Viite> tiedot = jsonTiedonsaanti.haeTiedot(Filtteri.KAIKKI, Viite.class);
-        if (tiedot == null) {
-            return;
-        }
-        for (Viite viite : tiedot) {
-            viitteet.add(viite);
         }
     }
 
@@ -125,42 +120,55 @@ public class Kontrolleri {
     }
 
     public void lisaaViite(Viite lisattava) {
-        this.viitteet.add(lisattava);
+        this.viitteet.lisaa(lisattava);
     }
 
     public List<Viite> getViitteet() {
-        return this.viitteet;
+        return viitteet.keraa();
     }
 
-    public List<Viite> hae(ViiteTyyppi tyyppi, String hakusana) {
-        List<Viite> palautus = new ArrayList<>();
-        for (Viite v : this.viitteet) {
-            if (v.getTyyppi().equals(tyyppi)) {
+    public List<Viite> hae(final ViiteTyyppi tyyppi, final String hakusana) {
+        viimeksiHaetut.clear();
+        viimeksiHaetut.addAll(new Viitekokoelma(viitteet).rajaa(new Filtteri<Viite>() {
+            @Override
+            public boolean testaa(Viite testattava) {
+                if (!testattava.getTyyppi().equals(tyyppi)) {
+                    return false;
+                }
                 if (hakusana.isEmpty()) {
-                    palautus.add(v);
-                } else {
-                    for (Attribuutti attr : v.asetetutAttribuutit()) {
-                        if (v.haeArvo(attr).contains(hakusana)) {
-                            palautus.add(v);
-                            break;
-                        }
+                    return true;
+                }
+                for (Attribuutti attr : testattava.asetetutAttribuutit()) {
+                    if (testattava.haeArvo(attr).toLowerCase().contains(hakusana.toLowerCase())) {
+                        return true;
                     }
                 }
+                return false;
             }
-        }
-        this.viimeksiHaetut = palautus;
-        return palautus;
+
+        }).keraa());
+        return Collections.unmodifiableList(viimeksiHaetut);
     }
 
-    /*
-     * Poistaa viitteen järjestelmästä parametrina annetun indeksin perusteella viimeksi haettujen listasta
+    /**
+     * Poistaa viitteen järjestelmästä parametrina annetun indeksin perusteella
+     * viimeksi haettujen listasta
+     *
+     * @param indeksi
      */
     public void poista(int indeksi) {
         if (this.viimeksiHaetut == null) {
             return;
         }
-        this.viitteet.remove(this.viimeksiHaetut.get(indeksi));
-        this.viimeksiHaetut.remove(this.viimeksiHaetut.get(indeksi));
+        final Viite viite = this.viimeksiHaetut.get(indeksi);
+        this.viitteet.rajaa(new Filtteri<Viite>() {
+
+            @Override
+            public boolean testaa(Viite testattava) {
+                return !testattava.equals(viite);
+            }
+        });
+        this.viimeksiHaetut.remove(viite);
     }
 
     public boolean onkoValidi(int indeksi) {
@@ -172,19 +180,14 @@ public class Kontrolleri {
 
     public void talletaBibtexTiedostoon(File tiedosto) {
         try {
-            bibtexTiedonsaanti.tyhjenna();
-            bibtexTiedonsaanti.lisaaTieto(viitteet.toArray());
-            bibtexTiedonsaanti.tallenna(tiedosto);
+            bibtex.tallenna(tiedosto, viitteet);
         } catch (IOException ex) {
-            System.err.println("Tiedostovika");
         }
     }
 
     public void tallenna() {
-        jsonTiedonsaanti.tyhjenna();
-        jsonTiedonsaanti.lisaaTieto(viitteet.toArray());
         try {
-            jsonTiedonsaanti.tallenna(tiedosto);
+            json.tallenna(tiedosto, viitteet);
         } catch (IOException ex) {
             Logger.getLogger(Kontrolleri.class.getName()).log(Level.SEVERE, null, ex);
         }

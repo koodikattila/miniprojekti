@@ -1,6 +1,7 @@
 package koodikattila.viitehallinta.domain;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import static koodikattila.viitehallinta.domain.Attribuutti.address;
 import static koodikattila.viitehallinta.domain.Attribuutti.author;
@@ -86,11 +87,11 @@ public enum ViiteTyyppi {
     }
 
     public List<Attribuutti> haePakolliset() {
-        return pakolliset;
+        return Collections.unmodifiableList(pakolliset);
     }
 
     public List<Attribuutti> haeValinnaiset() {
-        return valinnaiset;
+        return Collections.unmodifiableList(valinnaiset);
     }
 
     private static Attribuutti[] lista(Attribuutti... attribuuttit) {

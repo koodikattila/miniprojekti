@@ -21,17 +21,17 @@ public class Taulukko extends AbstractTableModel {
 
     private Kontrolleri kontrolleri;
     private ViiteTyyppi valittuTyyppi;
-    
+
     private List<Attribuutti> sarakkeet;
     private List<Viite> viitteet;
-    
-    public Taulukko (Kontrolleri k, ViiteTyyppi tyyppi) {
+
+    public Taulukko(Kontrolleri k, ViiteTyyppi tyyppi, String hakusana) {
         super();
         this.kontrolleri = k;
         this.valittuTyyppi = tyyppi;
-        
+
         this.sarakkeet = haeSarakkeet();
-        this.viitteet = kontrolleri.hae(valittuTyyppi, "");
+        this.viitteet = kontrolleri.hae(valittuTyyppi, hakusana);
     }
 
     private List<Attribuutti> haeSarakkeet() {
@@ -83,12 +83,13 @@ public class Taulukko extends AbstractTableModel {
         if (col == 0) {
             viite.setAvain(kontrolleri.tarkistaViiteavain(viite, (String) value));
 //            viitteet.get(row).setAvain((String) value);
-            
-            
+
         } else {
             boolean validi = viite.onkoValidi();
             viite.asetaArvo(sarakkeet.get(col - 1), (String) value);
-            if (!validi) viite.setAvain(kontrolleri.generoiViiteavain(viite));
+            if (!validi) {
+                viite.setAvain(kontrolleri.generoiViiteavain(viite));
+            }
         }
     }
 

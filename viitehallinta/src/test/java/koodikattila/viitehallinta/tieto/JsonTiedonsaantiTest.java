@@ -21,7 +21,8 @@ public class JsonTiedonsaantiTest {
     private Viite B = new Viite(ViiteTyyppi.book);
     private Viite AA = new Viite(ViiteTyyppi.article);
 
-    private Tiedonsaanti<Viite> tiedonsaanti;
+    private IO tiedonsaanti;
+    private Viitekokoelma kokoelma;
     private File testiTiedosto;
     private final Filtteri<Viite> sisaltaaA = new Filtteri<Viite>() {
         @Override
@@ -34,8 +35,8 @@ public class JsonTiedonsaantiTest {
     public void setUp() throws Exception {
         testiTiedosto = new File("testiTiedosto");
         AA.asetaArvo(Attribuutti.author, "XD");
-        tiedonsaanti = new JsonTiedonsaanti();
-        tiedonsaanti.lisaaTieto(A, B, AA);
+        tiedonsaanti = new IO(new Json());
+        kokoelma = new Viitekokoelma().lisaa(A, B, AA);
     }
 
     @After
@@ -45,18 +46,16 @@ public class JsonTiedonsaantiTest {
 
     @Test
     public void testHaeTiedot() {
-        Collection<Viite> tiedot = tiedonsaanti.haeTiedot(sisaltaaA, Viite.class);
+        Collection<Viite> tiedot = kokoelma.rajaa(sisaltaaA).keraa();
         assertTrue(tiedot.contains(A));
         assertTrue(tiedot.contains(AA));
     }
 
     @Test
     public void testTallenna() throws Exception {
-        Collection<Viite> viitteet1 = tiedonsaanti.haeTiedot(Filtteri.KAIKKI, Viite.class);
-        tiedonsaanti.tallenna(testiTiedosto);
-        tiedonsaanti.lataa(testiTiedosto);
-        Collection<Viite> viitteet2 = tiedonsaanti.haeTiedot(Filtteri.KAIKKI, Viite.class);
-        for (Viite viite : viitteet1) {
+        tiedonsaanti.tallenna(testiTiedosto, kokoelma);
+        Viitekokoelma viitteet2 = tiedonsaanti.lataa(testiTiedosto);
+        for (Viite viite : kokoelma) {
             boolean flag = false;
             for (Viite viite2 : viitteet2) {
                 if (viite.getTyyppi() == viite2.getTyyppi() && viite.asetetutAttribuutit().equals(viite.asetetutAttribuutit())) {
