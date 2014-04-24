@@ -39,7 +39,7 @@ scenario "Viitteistä voi generoida uuden tiedoston", {
     }
     then 'Tiedosto generoidaan käyttäjän valitsemaan sijaintiin', {
         
-        String haluttu = new String("@article{avain1,\n"
+        haluttu = new String("@article{avain1,\n"
         + " author       = \"author1\",\n"
         + " journal      = \"journal1\",\n"
         + " title        = \"title1\",\n"
@@ -59,7 +59,7 @@ scenario "Viitteistä voi generoida uuden tiedoston", {
         + "}\n");
 
         //tiedoston lukeminen stringiksi
-        String teksti = null;
+        teksti = null;
         try {
             teksti = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(Files.readAllBytes(Paths.get("test.bibtex")))).toString();
         } catch (IOException ex) {
@@ -86,14 +86,15 @@ scenario "Viitteistä voi generoida tyhjän tiedoston", {
         k = new Kontrolleri(new File("test.json"));
     }
     when 'Käyttäjä haluaa generoida bibtex-tiedoston', {
+        
         k.talletaBibtexTiedostoon(new File("test.bibtex"));
     }
     then 'Tyhjä tiedosto generoidaan käyttäjän valitsemaan sijaintiin', {
         
-        String haluttu = new String("");
+        haluttu = new String("");
 
         //tiedoston lukeminen stringiksi
-        String teksti = null;
+        teksti = null;
         try {
             teksti = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(Files.readAllBytes(Paths.get("test.bibtex")))).toString();
         } catch (IOException ex) {
