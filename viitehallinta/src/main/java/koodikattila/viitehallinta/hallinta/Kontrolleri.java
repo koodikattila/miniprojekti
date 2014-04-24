@@ -139,7 +139,7 @@ public class Kontrolleri {
                     return true;
                 }
                 for (Attribuutti attr : testattava.asetetutAttribuutit()) {
-                    if (testattava.haeArvo(attr).contains(hakusana)) {
+                    if (testattava.haeArvo(attr).toLowerCase().contains(hakusana.toLowerCase())) {
                         return true;
                     }
                 }
