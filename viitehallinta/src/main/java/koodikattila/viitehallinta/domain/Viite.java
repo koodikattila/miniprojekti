@@ -44,40 +44,7 @@ public class Viite {
         this.avain = avain;
     }
     
-    private List<String> nimet(String kirjoittajat) {
-        return Arrays.asList(kirjoittajat.split(" and "));
-    }
-    
-    private String etuosa(List<String> nimet) {
-        if (nimet.size() > 1) {
-            String etuosa = "";
-            for (String nimi : nimet) {
-                etuosa = etuosa.concat(nimi.substring(0, 1));
-            }
-            return etuosa;
-        } else {
-            return nimet.get(0).substring(0, 2);
-        }
-    }
 
-    public void generoiViiteavain() {
-        String avain = "";
-        String kirjoittaja;
-        String vuosiluku;
-        if (attribuutit.containsKey(Attribuutti.author)) {
-            kirjoittaja = attribuutit.get(Attribuutti.author);
-        } else {
-            kirjoittaja = "aaa and bbb and ccc";
-        }
-        if (attribuutit.containsKey(Attribuutti.year)) {
-            vuosiluku = attribuutit.get(Attribuutti.year);
-        } else {
-            vuosiluku = "xxxx";
-        }
-        avain = avain.concat(etuosa(nimet(kirjoittaja))) + vuosiluku.substring(vuosiluku.length() - 2);
-
-        this.setAvain(avain);
-    }
     /*
      * Asettaa viiteoliolle parametrina annetun attribuutin arvoksi
      * parametrina annetun arvon.
@@ -88,6 +55,7 @@ public class Viite {
         } else {
             this.attribuutit.put(attr, arvo);
         }
+        
     }
 
     /**
@@ -109,14 +77,13 @@ public class Viite {
      *
      */
     public boolean onkoValidi() {
-        if (this.avain == null || this.avain.isEmpty()) {
-            return false;
-        }
+        
         for (Attribuutti attribuutti : tyyppi.haePakolliset()) {
             if (!attribuutit.containsKey(attribuutti)) {
                 return false;
             }
         }
+        
         return true;
     }
 

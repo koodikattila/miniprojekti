@@ -114,25 +114,25 @@ public class ViiteTest {
         assertTrue(viite.tagitSisaltaa("abc"));
     }
     
-    @Test
-    public void viiteavainMuodostetaanOikeinKunYksiKirjoittaja() {
-        viite.asetaArvo(Attribuutti.author, "Ruohonen, Henna");
-        viite.asetaArvo(Attribuutti.year, "2014");
-        viite.generoiViiteavain();
-        assertEquals("Ru14", viite.getAvain());
-    }
-    
-    @Test
-    public void viiteavainMuodostetaanOikeinKunKolmeKirjoittajaa() {
-        viite.asetaArvo(Attribuutti.author, "Ruohonen, Henna and Kalliokoski, Liekki and Niinistö, Sauli");
-        viite.asetaArvo(Attribuutti.year, "1991");
-        viite.generoiViiteavain();
-        assertEquals("RKN91", viite.getAvain());
-    }
-    
-    @Test
-    public void viiteavainEiOleTyhja() {
-        viite.generoiViiteavain();
-        assertNotNull(viite.getAvain());
-    }
+//    @Test
+//    public void viiteavainMuodostetaanOikeinKunYksiKirjoittaja() {
+//        viite.asetaArvo(Attribuutti.author, "Ruohonen, Henna");
+//        viite.asetaArvo(Attribuutti.year, "2014");
+//        viite.generoiViiteavain();
+//        assertEquals("Ru14", viite.getAvain());
+//    }
+//    
+//    @Test
+//    public void viiteavainMuodostetaanOikeinKunKolmeKirjoittajaa() {
+//        viite.asetaArvo(Attribuutti.author, "Ruohonen, Henna and Kalliokoski, Liekki and Niinistö, Sauli");
+//        viite.asetaArvo(Attribuutti.year, "1991");
+//        viite.generoiViiteavain();
+//        assertEquals("RKN91", viite.getAvain());
+//    }
+//    
+//    @Test
+//    public void viiteavainEiOleTyhja() {
+//        viite.generoiViiteavain();
+//        assertNotNull(viite.getAvain());
+//    }
 }

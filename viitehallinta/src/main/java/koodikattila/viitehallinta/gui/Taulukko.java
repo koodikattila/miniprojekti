@@ -79,10 +79,16 @@ public class Taulukko extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object value, int row, int col) {
+        Viite viite = viitteet.get(row);
         if (col == 0) {
-            viitteet.get(row).setAvain((String) value);
+            viite.setAvain(kontrolleri.tarkistaViiteavain(viite, (String) value));
+//            viitteet.get(row).setAvain((String) value);
+            
+            
         } else {
-            viitteet.get(row).asetaArvo(sarakkeet.get(col - 1), (String) value);
+            boolean validi = viite.onkoValidi();
+            viite.asetaArvo(sarakkeet.get(col - 1), (String) value);
+            if (!validi) viite.setAvain(kontrolleri.generoiViiteavain(viite));
         }
     }
 
