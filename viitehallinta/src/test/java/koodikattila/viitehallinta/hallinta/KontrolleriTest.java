@@ -1,16 +1,22 @@
 package koodikattila.viitehallinta.hallinta;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
-import koodikattila.viitehallinta.tieto.Filtteri;
-import koodikattila.viitehallinta.tieto.Tiedonsaanti;
+import koodikattila.viitehallinta.tieto.IO;
+import koodikattila.viitehallinta.tieto.Viitekokoelma;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
-import org.junit.*;
-import static org.mockito.Mockito.*;
+import org.junit.Before;
+import org.junit.Test;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -100,28 +106,27 @@ public class KontrolleriTest {
     }
 
     @Test
-    public void testaaPopuloiLista() {
+    public void testaaPopuloiLista() throws IOException {
         lista = new ArrayList<>();
         lista.add(new Viite(ViiteTyyppi.article));
         lista.add(new Viite(ViiteTyyppi.book));
         lista.add(new Viite(ViiteTyyppi.conference));
 
-        Tiedonsaanti<Viite> mockTiedonsaanti = mock(Tiedonsaanti.class);
-        when(mockTiedonsaanti.haeTiedot(Filtteri.KAIKKI, Viite.class)).thenReturn(lista);
+        IO mockTiedonsaanti = mock(IO.class);
+        when(mockTiedonsaanti.lataa(null)).thenReturn(new Viitekokoelma().lisaa(lista));
 
         kontrolleri = new Kontrolleri(mockTiedonsaanti, null, null);
-        verify(mockTiedonsaanti).haeTiedot(Filtteri.KAIKKI, Viite.class);
+        verify(mockTiedonsaanti).lataa(null);
         assertEquals(lista, kontrolleri.getViitteet());
     }
 
     @Test
     public void testaaTallenna() throws IOException {
-        Tiedonsaanti<Viite> mockTiedonsaanti = mock(Tiedonsaanti.class);
+        IO mockTiedonsaanti = mock(IO.class);
+        when(mockTiedonsaanti.lataa(null)).thenReturn(new Viitekokoelma());
 
         kontrolleri = new Kontrolleri(mockTiedonsaanti, null, null);
         kontrolleri.tallenna();
-        verify(mockTiedonsaanti).tyhjenna();
-        verify(mockTiedonsaanti).lisaaTieto();
-        verify(mockTiedonsaanti).tallenna(null);
+        verify(mockTiedonsaanti).tallenna(isNull(File.class), any(Viitekokoelma.class));
     }
 }

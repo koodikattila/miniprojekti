@@ -1,12 +1,7 @@
 package koodikattila.viitehallinta.tieto;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 
@@ -14,11 +9,11 @@ import koodikattila.viitehallinta.domain.Viite;
  *
  * @author Koodikattila
  */
-public class BibTeXTiedonsaanti extends ParseavaTiedonsaanti<Viite> implements Parseri {
+public class BibTeX implements Parseri {
 
-    private Map<Character, String> muunnos;
+    private final Map<Character, String> muunnos;
 
-    public BibTeXTiedonsaanti() {
+    public BibTeX() {
         muunnos = new HashMap<>();
         muunnos.put('ä', "\\\"{a}");
         muunnos.put('Ä', "\\\"{A}");
@@ -29,22 +24,12 @@ public class BibTeXTiedonsaanti extends ParseavaTiedonsaanti<Viite> implements P
     }
 
     @Override
-    public void lueTiedot(Scanner lukija, Collection<Viite> tiedot) {
-        //TODO
+    public Viitekokoelma viitekokoelmaksi(String teksti) {
+        throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    public void kirjoitaTieto(Writer kirjoittaja, Viite tieto) throws IOException {
-        kirjoittaja.write(viiteTekstiksi(new StringBuilder(), tieto));
-    }
-
-    @Override
-    public List<Viite> viitekokoelmaksi(String teksti) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String tekstiksi(List<Viite> viitteet) {
+    public String tekstiksi(Viitekokoelma viitteet) {
         StringBuilder rakentaja = new StringBuilder();
         for (Viite viite : viitteet) {
             viiteTekstiksi(rakentaja, viite);

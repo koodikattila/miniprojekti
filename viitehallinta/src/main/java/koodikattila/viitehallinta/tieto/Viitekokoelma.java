@@ -3,6 +3,7 @@ package koodikattila.viitehallinta.tieto;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import koodikattila.viitehallinta.domain.Viite;
@@ -11,33 +12,49 @@ import koodikattila.viitehallinta.domain.Viite;
  *
  * @author Koodikattila
  */
-public class Viitekokoelma {
+public class Viitekokoelma implements Iterable<Viite> {
 
-    private final List<Viite> viitteet;
+    private List<Viite> viitteet;
 
     public Viitekokoelma() {
-        viitteet = new ArrayList<>();
+        this.viitteet = new ArrayList();
     }
 
-    public void lisaa(Viite... viitteet) {
-        this.viitteet.addAll(Arrays.asList(viitteet));
+    public Viitekokoelma(Viitekokoelma viitekokoelma) {
+        this();
+        this.viitteet.addAll(viitekokoelma.viitteet);
     }
 
-    public Collection<Viite> hae(Filtteri<Viite> filtteri) {
-        Collection<Viite> oliot = new ArrayList<>();
+    public Viitekokoelma lisaa(Collection<Viite> viitteet) {
+        this.viitteet.addAll(viitteet);
+        return this;
+    }
+
+    public Viitekokoelma lisaa(Viitekokoelma kokoelma) {
+        return lisaa(kokoelma.viitteet);
+    }
+
+    public Viitekokoelma lisaa(Viite... viite) {
+        return lisaa(Arrays.asList(viite));
+    }
+
+    public Viitekokoelma rajaa(Filtteri<Viite> filtteri) {
+        List<Viite> lista = new ArrayList<>();
         for (Viite olio : viitteet) {
             if (filtteri.testaa(olio)) {
-                oliot.add(olio);
+                lista.add(olio);
             }
         }
-        return oliot;
+        viitteet = lista;
+        return this;
     }
 
-    public void poista(Filtteri<Viite> filtteri) {
-        for (Iterator<Viite> it = viitteet.iterator(); it.hasNext();) {
-            if (filtteri.testaa(it.next())) {
-                it.remove();
-            }
-        }
+    public List<Viite> keraa() {
+        return Collections.unmodifiableList(viitteet);
+    }
+
+    @Override
+    public Iterator<Viite> iterator() {
+        return viitteet.iterator();
     }
 }

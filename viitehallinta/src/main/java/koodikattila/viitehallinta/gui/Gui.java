@@ -16,12 +16,10 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
-import javax.swing.text.html.HTMLDocument;
 import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
 import koodikattila.viitehallinta.hallinta.Kontrolleri;
-import koodikattila.viitehallinta.tieto.JsonTiedonsaanti;
 
 /**
  *
@@ -36,7 +34,7 @@ public class Gui extends javax.swing.JFrame {
         this.kontrolleri = new Kontrolleri();
         initComponents();
     }
-    
+
     public boolean onkoValid(int rivi) {
         return kontrolleri.onkoValidi(rivi);
     }
@@ -51,7 +49,7 @@ public class Gui extends javax.swing.JFrame {
         TableModel model = new AbstractTableModel() {
             List<Attribuutti> sarakkeet = haeSarakkeet();
             List<Viite> viitteet = kontrolleri.hae((ViiteTyyppi) jList1.getSelectedValue(), "");
-            
+
             private List<Attribuutti> haeSarakkeet() {
                 List<Attribuutti> pakolliset = ((ViiteTyyppi) jList1.getSelectedValue()).haePakolliset();
                 List<Attribuutti> valinnaiset = ((ViiteTyyppi) jList1.getSelectedValue()).haeValinnaiset();
@@ -76,7 +74,7 @@ public class Gui extends javax.swing.JFrame {
 
             @Override
             public int getColumnCount() {
-                return sarakkeet.size()+1;
+                return sarakkeet.size() + 1;
             }
 
             @Override
@@ -397,9 +395,9 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1PropertyChange
 
     private void jScrollPane2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane2MouseClicked
-        if (this.jTable1.getCellEditor() != null ) {
-        this.jTable1.getCellEditor().stopCellEditing();
-        }      
+        if (this.jTable1.getCellEditor() != null) {
+            this.jTable1.getCellEditor().stopCellEditing();
+        }
     }//GEN-LAST:event_jScrollPane2MouseClicked
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -455,7 +453,7 @@ public class Gui extends javax.swing.JFrame {
 //            }
 //        });
 //    }
-    private Kontrolleri kontrolleri;
+    private final transient Kontrolleri kontrolleri;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
