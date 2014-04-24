@@ -49,34 +49,33 @@ public class Viite {
     }
     
     private String etuosa(List<String> nimet) {
-        String etuosa = "";
-        if(nimet.size() > 1) {
+        if (nimet.size() > 1) {
+            String etuosa = "";
             for (String nimi : nimet) {
-            etuosa = etuosa.concat(nimi.substring(0, 1));
+                etuosa = etuosa.concat(nimi.substring(0, 1));
             }
+            return etuosa;
+        } else {
+            return nimet.get(0).substring(0, 2);
         }
-        else etuosa = etuosa.concat(nimet.get(0).substring(0, 2));
-        return etuosa;
     }
-    
+
     public void generoiViiteavain() {
         String avain = "";
         String kirjoittaja;
         String vuosiluku;
-            if (this.getTyyppi() == ViiteTyyppi.book 
-                    || this.getTyyppi() == ViiteTyyppi.article 
-                    || this.getTyyppi() == ViiteTyyppi.inproceedings) {
-                if (attribuutit.containsKey(Attribuutti.author)) {
-                    kirjoittaja = attribuutit.get(Attribuutti.author);
-                }
-                else kirjoittaja = "aaaaaaa and bbbbbb and ccccc";
-                if (attribuutit.containsKey(Attribuutti.year)) {
-                    vuosiluku = attribuutit.get(Attribuutti.year);
-                }
-                else vuosiluku = "0000";
-                avain = avain.concat(etuosa(nimet(kirjoittaja))) + vuosiluku.substring(vuosiluku.length() - 2);
-            }
-            
+        if (attribuutit.containsKey(Attribuutti.author)) {
+            kirjoittaja = attribuutit.get(Attribuutti.author);
+        } else {
+            kirjoittaja = "aaa and bbb and ccc";
+        }
+        if (attribuutit.containsKey(Attribuutti.year)) {
+            vuosiluku = attribuutit.get(Attribuutti.year);
+        } else {
+            vuosiluku = "xxxx";
+        }
+        avain = avain.concat(etuosa(nimet(kirjoittaja))) + vuosiluku.substring(vuosiluku.length() - 2);
+
         this.setAvain(avain);
     }
     /*
