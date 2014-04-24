@@ -153,7 +153,7 @@
         <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="tekstiMuuttunut"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="hakuKentta.getDocument().addDocumentListener(new DocumentListener() {&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;&#xa;    }&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        muutettu(e);&#xa;    }&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        muutettu(e);&#xa;    }&#xa;    private void muutettu(DocumentEvent e) {&#xa;        Document dokumentti = e.getDocument();&#xa;        try{&#xa;            tekstiMuuttunut(dokumentti.getText(0, dokumentti.getLength()));&#xa;        }catch(BadLocationException ex){&#xa;            ex.printStackTrace();&#xa;        }&#xa;    }&#xa;});"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="hakuKentta.getDocument().addDocumentListener(new DocumentListener() {&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;&#xa;    }&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;       tekstiMuuttunut();&#xa;    }&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;       tekstiMuuttunut();&#xa;    }&#xa;});"/>
       </AuxValues>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane2">

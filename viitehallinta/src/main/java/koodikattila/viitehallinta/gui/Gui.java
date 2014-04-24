@@ -12,8 +12,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
 import koodikattila.viitehallinta.hallinta.Kontrolleri;
@@ -30,6 +28,7 @@ public class Gui extends javax.swing.JFrame {
     public Gui() {
         this.kontrolleri = new Kontrolleri(new File("viitehallinta.json"));
         initComponents();
+        tekstiMuuttunut();
     }
 
     public boolean onkoValid(int rivi) {
@@ -37,31 +36,27 @@ public class Gui extends javax.swing.JFrame {
     }
 
     public void paivitaTaulukko() {
-        //System.out.println("paivitaTaulukko");
-        //System.out.println(new Exception().getStackTrace()[1]);
-        if (attribuuttiLista.getSelectedValue() == null) {
+        ViiteTyyppiSailo valittu = attribuuttiLista.getSelectedValue();
+        if (valittu == null) {
             return;
         }
-        TableModel model = new Taulukko(kontrolleri, attribuuttiLista.getSelectedValue().getTyyppi(), hakuKentta.getText());
+        TableModel model = new Taulukko(kontrolleri, valittu.getTyyppi(), hakuKentta.getText());
+        yksittainenMuutos(valittu);
+        attribuuttiLista.repaint();
         this.viiteTaulukko.setModel(model);
     }
 
-    private void tekstiMuuttunut(String teksti) {
+    private void tekstiMuuttunut() {
         ListModel<ViiteTyyppiSailo> modeli = attribuuttiLista.getModel();
-        if (teksti.isEmpty()) {
-            for (int i = 0; i < modeli.getSize(); i++) {
-                ViiteTyyppiSailo sailo = modeli.getElementAt(i);
-                sailo.nollaaMaara();
-                kontrolleri.hae(sailo.getTyyppi(), "");
-            }
-        } else {
-            for (int i = 0; i < modeli.getSize(); i++) {
-                ViiteTyyppiSailo sailo = modeli.getElementAt(i);
-                sailo.setMaara(kontrolleri.hae(sailo.getTyyppi(), teksti).size());
-            }
+        for (int i = 0; i < modeli.getSize(); i++) {
+            yksittainenMuutos(modeli.getElementAt(i));
         }
         attribuuttiLista.repaint();
         paivitaTaulukko();
+    }
+
+    private void yksittainenMuutos(ViiteTyyppiSailo sailo) {
+        sailo.setMaara(kontrolleri.hae(sailo.getTyyppi(), hakuKentta.getText()).size());
     }
 
     /**
@@ -144,18 +139,10 @@ public class Gui extends javax.swing.JFrame {
 
             }
             public void removeUpdate(DocumentEvent e) {
-                muutettu(e);
+                tekstiMuuttunut();
             }
             public void insertUpdate(DocumentEvent e) {
-                muutettu(e);
-            }
-            private void muutettu(DocumentEvent e) {
-                Document dokumentti = e.getDocument();
-                try{
-                    tekstiMuuttunut(dokumentti.getText(0, dokumentti.getLength()));
-                }catch(BadLocationException ex){
-                    ex.printStackTrace();
-                }
+                tekstiMuuttunut();
             }
         });
         hakuKentta.addActionListener(new java.awt.event.ActionListener() {

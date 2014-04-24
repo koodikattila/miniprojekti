@@ -13,7 +13,6 @@ class ViiteTyyppiSailo {
 
     public ViiteTyyppiSailo(ViiteTyyppi tyyppi) {
         this.tyyppi = tyyppi;
-        maara = -1;
     }
 
     public ViiteTyyppi getTyyppi() {
@@ -28,17 +27,9 @@ class ViiteTyyppiSailo {
         this.maara = maara;
     }
 
-    public void nollaaMaara() {
-        maara = -1;
-    }
-
     @Override
     public String toString() {
-        String stringi = "" + tyyppi;
-        if (maara != -1) {
-            stringi += " (" + maara + ")";
-        }
-        return stringi;
+        return tyyppi + " (" + maara + ")";
     }
 
 }
