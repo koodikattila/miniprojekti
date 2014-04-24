@@ -1,13 +1,26 @@
 package koodikattila.viitehallinta.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.ListModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableCellRenderer;
@@ -354,6 +367,43 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_poistaNappiaPainettu
 
     private void tallennaNappiaPainettu(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tallennaNappiaPainettu
+        final JFrame esikatselu = new JFrame();
+        JPanel paneeli = new JPanel();
+        paneeli.setLayout(new BorderLayout());
+        paneeli.setBorder(new TitledBorder(new EtchedBorder(), "Esikatselu"));
+        JTextArea tekstiRuutu = new JTextArea();
+        tekstiRuutu.setText(kontrolleri.getBibTeX());
+        tekstiRuutu.setEditable(false);
+        tekstiRuutu.setFont(Font.decode(Font.MONOSPACED + "-" + 13));
+        JScrollPane vieritys = new JScrollPane(tekstiRuutu);
+        vieritys.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        paneeli.add(vieritys, BorderLayout.CENTER);
+        JPanel painikePaneeli = new JPanel();
+        JButton tallenna = new JButton("Tallenna");
+        tallenna.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                valitseTiedostoJaTallenna();
+                esikatselu.dispose();
+            }
+        });
+        painikePaneeli.add(tallenna);
+        JButton sulje = new JButton("Sulje");
+        sulje.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                esikatselu.dispose();
+            }
+        });
+        painikePaneeli.add(sulje);
+        paneeli.add(painikePaneeli, BorderLayout.SOUTH);
+        paneeli.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
+        esikatselu.getContentPane().add(paneeli);
+        esikatselu.pack();
+        esikatselu.setVisible(true);
+    }//GEN-LAST:event_tallennaNappiaPainettu
+
+    private void valitseTiedostoJaTallenna() {
         JFileChooser saveFile = new JFileChooser();
         saveFile.setDialogTitle("Tallenna bibtex-tiedostoon");
         int retval = saveFile.showSaveDialog(null);
@@ -369,7 +419,7 @@ public class Gui extends javax.swing.JFrame {
         }
         System.out.println("Tallennetaan tiedostoon " + file.getAbsolutePath());
         kontrolleri.talletaBibtexTiedostoon(file);
-    }//GEN-LAST:event_tallennaNappiaPainettu
+    }
 
     private void viiteTaulukkoPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_viiteTaulukkoPropertyChange
         this.viiteTaulukko.repaint();

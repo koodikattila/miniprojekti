@@ -127,6 +127,14 @@ public class Kontrolleri {
         return viitteet.keraa();
     }
 
+    public String getBibTeX() {
+        return bibtex.getParseri().tekstiksi(viitteet);
+    }
+
+    public Viitekokoelma getViitekokoelma() {
+        return new Viitekokoelma(viitteet);
+    }
+
     public List<Viite> hae(final ViiteTyyppi tyyppi, final String hakusana) {
         viimeksiHaetut.clear();
         viimeksiHaetut.addAll(new Viitekokoelma(viitteet).rajaa(new Filtteri<Viite>() {

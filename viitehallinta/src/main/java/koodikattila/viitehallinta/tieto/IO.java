@@ -30,4 +30,8 @@ public class IO {
         }
         tiedosto.createNewFile();
     }
+
+    public Parseri getParseri() {
+        return parseri;
+    }
 }
