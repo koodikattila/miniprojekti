@@ -15,7 +15,7 @@
 {"tyyppi":"article","attribuutit":{"author":"Black, Toni R.","journal":"J. Comput. Small Coll.","title":"Helping novice programming students succeed","year":"2006","volume":"22","number":"2","pages":"109--114"},"avain":"B06"}
 {"tyyppi":"article","attribuutit":{"author":"Bruhn, Russel E. and Burton, Philip J.","journal":"SIGCSE Bull.","title":"An approach to teaching Java using computers","year":"2003","volume":"35","number":"4","pages":"94--99"},"avain":"BB03"}
 {"tyyppi":"article","attribuutit":{"author":"Spohrer, James C. and Soloway, Elliot","journal":"Commun. ACM","title":"Novice mistakes: are the folk wisdoms correct?","year":"1986","volume":"29","number":"7","pages":"624--632"},"avain":"SS86"}
-{"tagit":[],"tyyppi":"book","attribuutit":{"author":"R and K and N","publisher":"jee","title":"joo","year":"1991"},"avain":"RKN91"}
+{"tagit":["kirja","kandi"],"tyyppi":"book","attribuutit":{"author":"R and K and N","publisher":"jee","title":"joo","year":"1991"},"avain":"RKN91"}
 {"tagit":[],"tyyppi":"book","attribuutit":{"author":"aaa","publisher":"aaa","title":"aaa","year":"111"},"avain":"aa11"}
 {"tagit":[],"tyyppi":"book","attribuutit":{"author":"aaa","publisher":"aaa","title":"aaa","year":"111"},"avain":"aa112"}
 {"tagit":[],"tyyppi":"book","attribuutit":{"author":"aa","publisher":"aa","title":"aaa","year":"111"},"avain":"kmoi"}

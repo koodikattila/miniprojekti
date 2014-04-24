@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import koodikattila.viitehallinta.domain.Attribuutti;
@@ -25,6 +27,7 @@ public class Kontrolleri {
 
     private final Viitekokoelma viitteet;
     private List<Viite> viimeksiHaetut;
+    private Set<String> kaikkiTagit;
     private IO json;
     private IO bibtex;
     private File tiedosto;
@@ -37,6 +40,7 @@ public class Kontrolleri {
         viitteet = new Viitekokoelma();
         if (json != null) {
             populoiLista();
+            populoiTagit();
         }
     }
 
@@ -50,6 +54,21 @@ public class Kontrolleri {
         } catch (IOException ex) {
             Logger.getLogger(Kontrolleri.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void populoiTagit() {
+        this.kaikkiTagit = new HashSet<>();
+        for (Viite v : viitteet) {
+            if (v.haeTagit() == null) {
+                System.out.println("NULL");
+            } else {
+                kaikkiTagit.addAll(v.haeTagit());
+            }
+        }
+    }
+
+    public Set<String> getTagit() {
+        return this.kaikkiTagit;
     }
 
     private List<String> nimet(String kirjoittajat) {

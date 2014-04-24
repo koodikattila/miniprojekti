@@ -98,7 +98,13 @@ public class Viite {
     }
 
     public Set<String> haeTagit() {
-        return Collections.unmodifiableSet(tagit);
+        if (this.tagit == null) {
+            System.out.println("NULL");
+            return new HashSet<>();
+        } else {
+            System.out.println("EI NULL");
+            return this.tagit;
+        }
     }
 
     public boolean tagitSisaltaa(String str) {

@@ -42,6 +42,10 @@ public class Taulukko extends AbstractTableModel {
         palautus.addAll(valinnaiset);
         return palautus;
     }
+    
+    public List<Viite> getViitteet() {
+        return this.viitteet;
+    }
 
     @Override
     public String getColumnName(int col) {
