@@ -35,7 +35,6 @@ public class BibTeXTiedonsaantiTest {
     }
 
     @Test
-    @Ignore
     public void attribuutillisenViitteenTallennus() throws IOException {
         tiedonsaanti.lisaaTieto(A);
         tiedonsaanti.tallenna(testiTiedosto);
