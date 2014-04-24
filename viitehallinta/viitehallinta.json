@@ -19,3 +19,6 @@
 {"tagit":[],"tyyppi":"book","attribuutit":{"author":"aaa","publisher":"aaa","title":"aaa","year":"111"},"avain":"aa11"}
 {"tagit":[],"tyyppi":"book","attribuutit":{"author":"aaa","publisher":"aaa","title":"aaa","year":"111"},"avain":"aa112"}
 {"tagit":[],"tyyppi":"book","attribuutit":{"author":"aa","publisher":"aa","title":"aaa","year":"111"},"avain":"kmoi"}
+{"tagit":[],"tyyppi":"book","attribuutit":{"author":"a","year":"a","title":"fdsf","publisher":"fdfd"},"avain":"aa"}
+{"tagit":[],"tyyppi":"book","attribuutit":{"author":"a, e","publisher":"fdfs","title":"dfsd","year":"e"},"avain":"ae"}
+{"tagit":[],"tyyppi":"book","attribuutit":{"author":"Henna and Antti","publisher":"fdfsd","title":"fdsf","year":"22"},"avain":"HA22"}

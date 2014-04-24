@@ -69,7 +69,11 @@ public class Kontrolleri {
             }
             return etuosa;
         } else {
-            return nimet.get(0).substring(0, 2);
+            String[] jaettuNimi = nimet.get(0).split(",");
+            if (jaettuNimi[0].length() == 1) {
+                return jaettuNimi[0];
+            }
+            return jaettuNimi[0].substring(0, 2);
         }
     }
 
@@ -86,7 +90,13 @@ public class Kontrolleri {
         } else {
             vuosiluku = "xxxx";
         }
-        String avain = etuosa(nimet(kirjoittaja)) + vuosiluku.substring(vuosiluku.length() - 2);
+        String leikattuvuosiluku;
+        if (vuosiluku.length() == 1) {
+            leikattuvuosiluku = vuosiluku;
+        } else {
+            leikattuvuosiluku = vuosiluku.substring(vuosiluku.length() - 2);
+        }
+        String avain = etuosa(nimet(kirjoittaja)) + leikattuvuosiluku;
         return tarkistaViiteavain(viite, avain);
 
     }
@@ -104,11 +114,14 @@ public class Kontrolleri {
                     numerointi++;
                     continue ulko;
                 }
-            } 
+            }
             break;
         }
-        if (numerointi == 1) return avain;
-        else return avain + numerointi;
+        if (numerointi == 1) {
+            return avain;
+        } else {
+            return avain + numerointi;
+        }
     }
 
     public void lisaaViite(Viite lisattava) {
