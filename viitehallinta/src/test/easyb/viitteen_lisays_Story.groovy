@@ -3,6 +3,7 @@ import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.*
 import koodikattila.viitehallinta.hallinta.*
 import koodikattila.viitehallinta.tieto.*
+import java.util.List;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,6 +11,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.lang.String;
+import koodikattila.viitehallinta.hallinta.Kontrolleri;
 
 description 'Järjestelmään pystyy lisäämään uuden viitteen'
 
@@ -29,7 +32,7 @@ scenario "Viitteen lisääminen järjestelmään onnistuu, kun annetaan kaikki v
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+        k = new Kontrolleri(new File("test.json"));
 
     }
     when 'Viitteeseen vaaditut tiedot on annettu', {
@@ -90,7 +93,7 @@ scenario "Viitteen lisäys järjestelmään onnistuu, vaikka kaikkia vaadittuja 
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+        k = new Kontrolleri(new File("test.json"));
 
     }
     when 'Viitteelle annetaan joitakin tietoja', {
@@ -129,7 +132,7 @@ scenario "Tyhjän viitteen lisäys järjestelmään onnistuu", {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+        k = new Kontrolleri(new File("test.json"));
 
     }
     when 'Viitteelle ei anneta mitään tietoja', {

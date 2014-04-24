@@ -40,8 +40,8 @@ public class Kontrolleri {
         }
     }
 
-    public Kontrolleri() {
-        this(new IO(new Json()), new IO(new BibTeX()), new File("viitehallinta.json"));
+    public Kontrolleri(File file) {
+        this(new IO(new Json()), new IO(new BibTeX()), file);
     }
 
     private void populoiLista() {
@@ -182,6 +182,7 @@ public class Kontrolleri {
         try {
             bibtex.tallenna(tiedosto, viitteet);
         } catch (IOException ex) {
+            Logger.getLogger(Kontrolleri.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -13,8 +13,7 @@ import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
 import koodikattila.viitehallinta.hallinta.Kontrolleri;
-import koodikattila.viitehallinta.tieto.BibTeXTiedonsaanti;
-import koodikattila.viitehallinta.tieto.JsonTiedonsaanti;
+import java.lang.String;
 
 description 'Viitteelle generoidaan uniikki viiteavain'
 
@@ -30,12 +29,10 @@ scenario "Uudelle viitteelle generoidaan uniikki viiteavain", {
         } catch (IOException ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
-        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+        k = new Kontrolleri(new File("test.json"));
 
     }
     when 'Käyttäjä on antanut pakolliset tiedot', {
-        
-        
         k.lisaaViite(new Viite(ViiteTyyppi.article));
         viitteet = k.hae(ViiteTyyppi.article, "");
         
@@ -66,7 +63,7 @@ scenario "Viiteavaimet ovat uniikkeja", {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+        k = new Kontrolleri(new File("test.json"));
 
     }
     when 'Käyttäjä lisää viitteen, jonka avaimeen vaikuttavat tiedot ovat samat kuin jo olemassa olevalla viitteellä', {

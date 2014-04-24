@@ -28,7 +28,7 @@ public class Gui extends javax.swing.JFrame {
      * Creates new form Gui
      */
     public Gui() {
-        this.kontrolleri = new Kontrolleri();
+        this.kontrolleri = new Kontrolleri(new File("viitehallinta.json"));
         initComponents();
     }
 

@@ -10,6 +10,9 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import koodikattila.viitehallinta.hallinta.Kontrolleri;
+import java.util.List;
+import java.lang.String;
 
 description 'Järjestelmään lisätyt viitteet tallentuvat tiedostoon'
 
@@ -27,7 +30,7 @@ scenario "Viite tallentuu järjestelmään, kun annetaan kaikki vaaditut tiedot"
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+        k = new Kontrolleri(new File("test.json"));
 
     }
     when 'Kaikki uuteen viitteeseen tarvittavat tiedot on annettu', {
@@ -73,7 +76,7 @@ scenario "Viite tallentuu järjestelmään, vaikka kaikkia vaadittuja tietoja ei
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+        k = new Kontrolleri(new File("test.json"));
 
     }
     when 'Viitteelle annetaan joitakin tietoja', {
@@ -112,7 +115,7 @@ scenario "Järjestelmään tallentuu uusi tyhjä viite, jos mitään tietoja ei 
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+        k = new Kontrolleri(new File("test.json"));
 
     }
     when 'Viitteelle ei anneta mitään tietoja', {

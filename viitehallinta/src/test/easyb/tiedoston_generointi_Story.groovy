@@ -13,8 +13,7 @@ import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
 import koodikattila.viitehallinta.hallinta.Kontrolleri;
-import koodikattila.viitehallinta.tieto.BibTeXTiedonsaanti;
-import koodikattila.viitehallinta.tieto.JsonTiedonsaanti;
+import java.lang.String;
 
 description 'Järjestelmään syötetyistä viitteistä voi generoida bibtex-tiedoston'
 
@@ -33,7 +32,7 @@ scenario "Viitteistä voi generoida uuden tiedoston", {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+        k = new Kontrolleri(new File("test.json"));
     }
     when 'Käyttäjä haluaa generoida bibtex-tiedoston', {
         k.talletaBibtexTiedostoon(new File("test.bibtex"));
@@ -84,7 +83,7 @@ scenario "Viitteistä voi generoida tyhjän tiedoston", {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+        k = new Kontrolleri(new File("test.json"));
     }
     when 'Käyttäjä haluaa generoida bibtex-tiedoston', {
         k.talletaBibtexTiedostoon(new File("test.bibtex"));

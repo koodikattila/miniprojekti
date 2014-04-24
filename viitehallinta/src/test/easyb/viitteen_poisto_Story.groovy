@@ -13,8 +13,7 @@ import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
 import koodikattila.viitehallinta.hallinta.Kontrolleri;
-import koodikattila.viitehallinta.tieto.BibTeXTiedonsaanti;
-import koodikattila.viitehallinta.tieto.JsonTiedonsaanti;
+import java.lang.String;
 
 description 'Järjestelmästä pystyy poistamaan viitteen'
 
@@ -33,7 +32,7 @@ scenario "Järjestelmästä voi poistaa halutun viitteen", {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+        k = new Kontrolleri(new File("test.json"));
     }
     when 'valitaan viite poistettavaksi', {
         List<Viite> viitteet = k.hae(ViiteTyyppi.article, "");
@@ -72,7 +71,7 @@ scenario "Järjestelmästä ei poistu viitteitä, jos viitettä ei poisteta", {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+        k = new Kontrolleri(new File("test.json"));
     }
     when 'listataan tietyn tyyppiset viitteet, mutta ei poisteta mitään', {
         List<Viite> viitteet = k.hae(ViiteTyyppi.article, "");
@@ -111,7 +110,7 @@ scenario "Järjestelmään ei jää viitteitä, jos kaikki viitteet poistetaan",
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+        k = new Kontrolleri(new File("test.json"));
     }
     when 'järjestelmästä poistetaan kaikki viitteet', {
         List<Viite> viitteet = k.hae(ViiteTyyppi.article, "");
