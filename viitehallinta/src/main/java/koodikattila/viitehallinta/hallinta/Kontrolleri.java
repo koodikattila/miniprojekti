@@ -57,7 +57,9 @@ public class Kontrolleri {
     }
 
     private void populoiTagit() {
-        this.kaikkiTagit = new HashSet<>();
+        if (this.kaikkiTagit == null) {
+            this.kaikkiTagit = new HashSet<>();
+        }
         for (Viite v : viitteet) {
             if (v.haeTagit() == null) {
                 System.out.println("NULL");
@@ -65,6 +67,13 @@ public class Kontrolleri {
                 kaikkiTagit.addAll(v.haeTagit());
             }
         }
+    }
+    
+    public void poistaTagiKaikista(String tagi) {
+        for (Viite v : viitteet) {
+            v.poistaTagi(tagi);
+        }
+        kaikkiTagit.remove(tagi);
     }
 
     public Set<String> getTagit() {
