@@ -1,7 +1,6 @@
 package koodikattila.viitehallinta.tieto;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -26,7 +25,11 @@ public class Viitekokoelma implements Iterable<Viite> {
     }
 
     public Viitekokoelma lisaa(Collection<Viite> viitteet) {
-        this.viitteet.addAll(viitteet);
+        for (Viite viite : viitteet) {
+            if (viite != null) {
+                this.viitteet.add(viite);
+            }
+        }
         return this;
     }
 
@@ -34,8 +37,13 @@ public class Viitekokoelma implements Iterable<Viite> {
         return lisaa(kokoelma.viitteet);
     }
 
-    public Viitekokoelma lisaa(Viite... viite) {
-        return lisaa(Arrays.asList(viite));
+    public Viitekokoelma lisaa(Viite... viitteet) {
+        for (Viite viite : viitteet) {
+            if (viite != null) {
+                this.viitteet.add(viite);
+            }
+        }
+        return this;
     }
 
     public Viitekokoelma rajaa(Filtteri<Viite> filtteri) {
