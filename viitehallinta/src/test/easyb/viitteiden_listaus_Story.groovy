@@ -18,8 +18,8 @@ import koodikattila.viitehallinta.tieto.JsonTiedonsaanti;
 
 description 'Järjestelmän viitteet pystyy listaamaan'
 
-scenario "Järjestelmässä olevia viitteitä voi tarkastella listana", {
-    given 'järjestelmässä on viitteitä', {
+scenario "Järjestelmässä olevia viitteitä voi tarkastella listana, joka sisältää tietyn tyyppiset viitteet", {
+    given 'järjestelmässä on tietyn tyyppisiä viitteitä', {
         //palautetaan tiedosto alkutilaan
         alkutila = new String("{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\"author1\",\"journal\":\"journal1\",\"title\":\"title1\",\"year\":\"year1\"},\"avain\":\"avain1\"}\n"
             + "{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\" author2\",\"journal\":\" journal2\",\"title\":\" title2\",\"year\":\" year2\"},\"avain\":\"avain2\"}\n"
@@ -35,11 +35,36 @@ scenario "Järjestelmässä olevia viitteitä voi tarkastella listana", {
         
         k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
     }
-    when 'yritetään tarkastella viitteitä', {
+    when 'yritetään tarkastella tietyn tyyppisiä viitteitä', {
         viitteet = k.hae(ViiteTyyppi.article, "");
     }
-    then 'viitteet näkyvät listana', {
+    then 'tietyn tyyppiset viitteet näkyvät listana', {
         viitteet.size().shouldBe(2);
         viitteet.get(0).getAvain().shouldEqual("avain1");
+    }
+}
+
+scenario "Järjestelmä ei näytä viitteitä, jos halutun tyyppisiä viitteitä ei ole lisätty", {
+    given 'järjestelmässä ei ole halutun tyyppisiä viitteitä', {
+        //palautetaan tiedosto alkutilaan
+        alkutila = new String("{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\"author1\",\"journal\":\"journal1\",\"title\":\"title1\",\"year\":\"year1\"},\"avain\":\"avain1\"}\n"
+            + "{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\" author2\",\"journal\":\" journal2\",\"title\":\" title2\",\"year\":\" year2\"},\"avain\":\"avain2\"}\n"
+            + "{\"tyyppi\":\"book\",\"attribuutit\":{\"author\":\" author3\",\"publisher\":\" publisher3\",\"title\":\" title3 \",\"year\":\" year3\"},\"avain\":\"avain3\"}\n");
+        try {
+            kirjoittaja = new FileWriter(new File("test.json"));
+
+            kirjoittaja.write(alkutila);
+            kirjoittaja.close();
+        } catch (IOException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+    }
+    when 'yritetään tarkastella tietyn tyyppisiä viitteitä', {
+        viitteet = k.hae(ViiteTyyppi.booklet, "");
+    }
+    then 'halutun tyyppisten viitteiden lista on tyhjä', {
+        viitteet.size().shouldBe(0);
     }
 }

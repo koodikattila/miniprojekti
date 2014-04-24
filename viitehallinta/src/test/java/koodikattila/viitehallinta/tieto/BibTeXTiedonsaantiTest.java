@@ -36,7 +36,6 @@ public class BibTeXTiedonsaantiTest {
     }
 
     @Test
-    @Ignore
     public void attribuutillisenViitteenTallennus() throws IOException {
         tiedonsaanti.tallenna(testiTiedosto, kokoelma);
         String korrekti = "@article{,\n author = }";

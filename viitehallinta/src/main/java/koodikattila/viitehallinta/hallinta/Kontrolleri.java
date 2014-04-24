@@ -3,6 +3,7 @@ package koodikattila.viitehallinta.hallinta;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -51,20 +52,71 @@ public class Kontrolleri {
         }
     }
 
-    /**
-     * Tarkistaa annetusta viiteavaimesta onko jo jollain aiemmalla viitteellä
-     * sama avain
-     *
-     * @param viiteavain
-     * @return true jos avain on uniikki, muuten false
-     */
-    public boolean onkoViiteavainUniikki(final String viiteavain) {
-        for (Viite v : viitteet) {
-            if (v.getAvain().equalsIgnoreCase(viiteavain)) {
-                return false;
+    private List<String> nimet(String kirjoittajat) {
+        return Arrays.asList(kirjoittajat.split(" and "));
+    }
+
+    private String etuosa(List<String> nimet) {
+        if (nimet.size() > 1) {
+            String etuosa = "";
+            for (String nimi : nimet) {
+                etuosa = etuosa.concat(nimi.substring(0, 1));
             }
+            return etuosa;
+        } else {
+            String[] jaettuNimi = nimet.get(0).split(",");
+            if (jaettuNimi[0].length() == 1) {
+                return jaettuNimi[0];
+            }
+            return jaettuNimi[0].substring(0, 2);
         }
-        return true;
+    }
+
+    public String generoiViiteavain(Viite viite) {
+        String kirjoittaja;
+        String vuosiluku;
+        if (viite.asetetutAttribuutit().contains(Attribuutti.author)) {
+            kirjoittaja = viite.haeArvo(Attribuutti.author);
+        } else {
+            kirjoittaja = "aaa and bbb and ccc";
+        }
+        if (viite.asetetutAttribuutit().contains(Attribuutti.year)) {
+            vuosiluku = viite.haeArvo(Attribuutti.year);
+        } else {
+            vuosiluku = "xxxx";
+        }
+        String leikattuvuosiluku;
+        if (vuosiluku.length() == 1) {
+            leikattuvuosiluku = vuosiluku;
+        } else {
+            leikattuvuosiluku = vuosiluku.substring(vuosiluku.length() - 2);
+        }
+        String avain = etuosa(nimet(kirjoittaja)) + leikattuvuosiluku;
+        return tarkistaViiteavain(viite, avain);
+
+    }
+
+    public String tarkistaViiteavain(Viite viite, String avain) {
+        int numerointi = 1;
+        ulko:
+        while (true) {
+            for (Viite v : viitteet) {
+                String talsi = avain;
+                if (numerointi != 1) {
+                    talsi = talsi + numerointi;
+                }
+                if (v.getAvain().equalsIgnoreCase(talsi) && !v.equals(viite)) {
+                    numerointi++;
+                    continue ulko;
+                }
+            }
+            break;
+        }
+        if (numerointi == 1) {
+            return avain;
+        } else {
+            return avain + numerointi;
+        }
     }
 
     public void lisaaViite(Viite lisattava) {

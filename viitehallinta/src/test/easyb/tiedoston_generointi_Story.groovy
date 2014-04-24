@@ -70,3 +70,37 @@ scenario "Viitteistä voi generoida uuden tiedoston", {
         teksti.shouldEqual(haluttu);
     }
 }
+
+scenario "Viitteistä voi generoida tyhjän tiedoston", {
+    given 'Järjestelmään ei ole lisätty viitteitä', {
+        //palautetaan tiedosto alkutilaan
+        alkutila = new String("");
+        try {
+            kirjoittaja = new FileWriter(new File("test.json"));
+
+            kirjoittaja.write(alkutila);
+            kirjoittaja.close();
+        } catch (IOException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        k = new Kontrolleri(new JsonTiedonsaanti(), new BibTeXTiedonsaanti(), new File("test.json"));
+    }
+    when 'Käyttäjä haluaa generoida bibtex-tiedoston', {
+        k.talletaBibtexTiedostoon(new File("test.bibtex"));
+    }
+    then 'Tyhjä tiedosto generoidaan käyttäjän valitsemaan sijaintiin', {
+        
+        String haluttu = new String("");
+
+        //tiedoston lukeminen stringiksi
+        String teksti = null;
+        try {
+            teksti = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(Files.readAllBytes(Paths.get("test.bibtex")))).toString();
+        } catch (IOException ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        teksti.shouldEqual(haluttu);
+    }
+}

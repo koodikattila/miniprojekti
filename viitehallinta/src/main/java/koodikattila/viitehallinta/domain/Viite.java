@@ -42,6 +42,7 @@ public class Viite {
         this.avain = avain;
     }
 
+
     /*
      * Asettaa viiteoliolle parametrina annetun attribuutin arvoksi
      * parametrina annetun arvon.
@@ -52,6 +53,7 @@ public class Viite {
         } else {
             this.attribuutit.put(attr, arvo);
         }
+
     }
 
     /**
@@ -73,14 +75,13 @@ public class Viite {
      *
      */
     public boolean onkoValidi() {
-        if (this.avain == null || this.avain.isEmpty()) {
-            return false;
-        }
+
         for (Attribuutti attribuutti : tyyppi.haePakolliset()) {
             if (!attribuutit.containsKey(attribuutti)) {
                 return false;
             }
         }
+
         return true;
     }
 
