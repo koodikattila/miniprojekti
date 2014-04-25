@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class Viite {
 
-    private final Set<String> tagit;
+    private Set<String> tagit;
     private final ViiteTyyppi tyyppi;
     private final Map<Attribuutti, String> attribuutit;
     private String avain;
@@ -94,11 +94,18 @@ public class Viite {
     }
 
     public void lisaaTagi(String tagi) {
+        if (this.tagit == null) {
+            this.tagit = new HashSet<>();
+        }
         tagit.add(tagi);
     }
 
     public Set<String> haeTagit() {
-        return Collections.unmodifiableSet(tagit);
+        if (this.tagit == null) {
+            this.tagit = new HashSet<>();
+        }
+        return this.tagit;
+
     }
 
     public boolean tagitSisaltaa(String str) {
@@ -106,6 +113,8 @@ public class Viite {
     }
 
     public void poistaTagi(String tagi) {
-        tagit.remove(tagi);
+        if (tagit != null) {
+            tagit.remove(tagi);
+        }
     }
 }
