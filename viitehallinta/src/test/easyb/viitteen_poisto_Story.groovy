@@ -52,7 +52,17 @@ scenario "Järjestelmästä voi poistaa halutun viitteen", {
         haluttu = new String("{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\" author2\",\"journal\":\" journal2\",\"title\":\" title2\",\"year\":\" year2\"},\"avain\":\"avain2\"}\n"
             + "{\"tyyppi\":\"book\",\"attribuutit\":{\"author\":\" author3\",\"publisher\":\" publisher3\",\"title\":\" title3 \",\"year\":\" year3\"},\"avain\":\"avain3\"}\n");
 
-        teksti.equals(haluttu).shouldBe(true);
+        haluttu2 = new String("{\"tagit\":[],\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\" author2\",\"journal\":\" journal2\",\"title\":\" title2\",\"year\":\" year2\"},\"avain\":\"avain2\"}\n{\"tagit\":[],\"tyyppi\":\"book\",\"attribuutit\":{\"author\":\" author3\",\"publisher\":\" publisher3\",\"title\":\" title3 \",\"year\":\" year3\"},\"avain\":\"avain3\"}\n");
+        //teksti.length().shouldEqual(haluttu2.length());
+        
+//        for (i = 0 ; i < haluttu2.length(); i++) {
+//            if (teksti.charAt(i) != haluttu2.charAt(i)) {
+//                System.out.println("Kohta " + i);
+//                System.out.println("laita sinne " + teksti.charAt(i) + ", siellä on nyt " + haluttu2.charAt(i) )
+//            }
+//        }
+//        
+        teksti.shouldEqual(haluttu2);
     }
 }
 
@@ -87,11 +97,20 @@ scenario "Järjestelmästä ei poistu viitteitä, jos viitettä ei poisteta", {
 
         }
         
-        haluttu = new String("{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\"author1\",\"journal\":\"journal1\",\"title\":\"title1\",\"year\":\"year1\"},\"avain\":\"avain1\"}\n"
-            + "{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\" author2\",\"journal\":\" journal2\",\"title\":\" title2\",\"year\":\" year2\"},\"avain\":\"avain2\"}\n"
-            + "{\"tyyppi\":\"book\",\"attribuutit\":{\"author\":\" author3\",\"publisher\":\" publisher3\",\"title\":\" title3 \",\"year\":\" year3\"},\"avain\":\"avain3\"}\n");
+        //        haluttu = new String("{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\"author1\",\"journal\":\"journal1\",\"title\":\"title1\",\"year\":\"year1\"},\"avain\":\"avain1\"}\n"
+        //            + "{\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\" author2\",\"journal\":\" journal2\",\"title\":\" title2\",\"year\":\" year2\"},\"avain\":\"avain2\"}\n"
+        //            + "{\"tyyppi\":\"book\",\"attribuutit\":{\"author\":\" author3\",\"publisher\":\" publisher3\",\"title\":\" title3 \",\"year\":\" year3\"},\"avain\":\"avain3\"}\n");
 
-        teksti.equals(haluttu).shouldBe(true);
+        haluttu2 = new String("{\"tagit\":[],\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\"author1\",\"journal\":\"journal1\",\"title\":\"title1\",\"year\":\"year1\"},\"avain\":\"avain1\"}\n{\"tagit\":[],\"tyyppi\":\"article\",\"attribuutit\":{\"author\":\" author2\",\"journal\":\" journal2\",\"title\":\" title2\",\"year\":\" year2\"},\"avain\":\"avain2\"}\n{\"tagit\":[],\"tyyppi\":\"book\",\"attribuutit\":{\"author\":\" author3\",\"publisher\":\" publisher3\",\"title\":\" title3 \",\"year\":\" year3\"},\"avain\":\"avain3\"}\n");
+        
+        //        haluttu2.length().shouldEqual(teksti.length());
+        //        for (i = 0 ; i < haluttu2.length(); i++) {
+        //            if (teksti.charAt(i) != haluttu2.charAt(i)) {
+        //                System.out.println("Kohta " + i);
+        //                System.out.println("laita sinne " + teksti.charAt(i) + ", siellä on nyt " + haluttu2.charAt(i) )
+        //            }
+        //        }
+        haluttu2.shouldEqual(teksti);
     }
 }
 
