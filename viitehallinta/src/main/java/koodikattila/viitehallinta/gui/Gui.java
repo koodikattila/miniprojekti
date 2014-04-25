@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Set;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -23,8 +24,13 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import koodikattila.viitehallinta.domain.Attribuutti;
 import koodikattila.viitehallinta.domain.Viite;
 import koodikattila.viitehallinta.domain.ViiteTyyppi;
 import koodikattila.viitehallinta.hallinta.Kontrolleri;
@@ -41,7 +47,51 @@ public class Gui extends javax.swing.JFrame {
     public Gui() {
         this.kontrolleri = new Kontrolleri(new File("viitehallinta.json"));
         initComponents();
-        tekstiMuuttunut();
+		tekstiMuuttunut();
+        viiteTaulukko.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent event) {
+                if (event.getValueIsAdjusting()) {
+                    return;
+                }
+                paivitaTagit();
+            }
+        });
+    }
+
+    private Viite valittuViite() {
+        if (this.viiteTaulukko.getSelectedRow() == -1) {
+            return null;
+        } else {
+            return this.taulukko.getViitteet().get(this.viiteTaulukko.getSelectedRow());
+        }
+    }
+
+    public void paivitaTagit() {
+        tagiValintaBoksi.setModel(new javax.swing.DefaultComboBoxModel(kontrolleri.getTagit().toArray()));
+
+        Viite valittu = valittuViite();
+        if (valittu == null) {
+            tagiLuettelo.setText("(ei viitettä valittuna)");
+        } else {
+            tagiLuettelo.setText(tagitTekstina(valittu.haeTagit()));
+            viitteenTiedot.setText(viiteTekstina(valittu));
+        }
+    }
+
+    public String tagitTekstina(Set<String> tagit) {
+        String palautus = "";
+        for (String s : tagit) {
+            palautus += s + " ";
+        }
+        return palautus;
+    }
+
+    public String viiteTekstina(Viite viite) {
+        String palautus = viite.getAvain() + "\n";
+        for (Attribuutti a : viite.asetetutAttribuutit()) {
+            palautus += a + ": " + viite.haeArvo(a) + "\n";
+        }
+        return palautus;
     }
 
     public boolean onkoValid(int rivi) {
@@ -53,10 +103,10 @@ public class Gui extends javax.swing.JFrame {
         if (valittu == null) {
             return;
         }
-        TableModel model = new Taulukko(kontrolleri, valittu.getTyyppi(), hakuKentta.getText());
+        this.taulukko = new Taulukko(kontrolleri, valittu.getTyyppi(), hakuKentta.getText());
         yksittainenMuutos(valittu);
         attribuuttiLista.repaint();
-        this.viiteTaulukko.setModel(model);
+        this.viiteTaulukko.setModel(taulukko);
     }
 
     private void tekstiMuuttunut() {
@@ -164,10 +214,10 @@ public class Gui extends javax.swing.JFrame {
             }
         });
         hakuKentta.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-            }
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
                 tekstiMuuttunut(evt);
+            }
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
         });
 
@@ -215,14 +265,9 @@ public class Gui extends javax.swing.JFrame {
 
         jScrollPane3.setViewportView(viitteenTiedot);
 
-        tagiValintaBoksi.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        tagiValintaBoksi.setModel(new javax.swing.DefaultComboBoxModel(kontrolleri.getTagit().toArray()));
 
-        tagiLuettelo.setText("tagi1, tagi2, tagi3, tagi4");
-        tagiLuettelo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tagiLuetteloActionPerformed(evt);
-            }
-        });
+        tagiLuettelo.setEditable(false);
 
         jLabel1.setText("tagit:");
 
@@ -251,7 +296,12 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        poistaTagiNappi.setText("poista kaikista");
+        poistaTagiNappi.setText("poista tagi kaikista");
+        poistaTagiNappi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                poistaTagiNappiActionPerformed(evt);
+            }
+        });
 
         lisaaTagiNappi.setText("lisää");
         lisaaTagiNappi.addActionListener(new java.awt.event.ActionListener() {
@@ -293,7 +343,7 @@ public class Gui extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(poistaTagiViitteestaNappi)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(poistaTagiNappi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(poistaTagiNappi, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE))))
                     .addComponent(hakuKentta)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jButton3)
@@ -419,7 +469,7 @@ public class Gui extends javax.swing.JFrame {
         }
         System.out.println("Tallennetaan tiedostoon " + file.getAbsolutePath());
         kontrolleri.talletaBibtexTiedostoon(file);
-    }
+    }//GEN-LAST:event_tallennaNappiaPainettu
 
     private void viiteTaulukkoPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_viiteTaulukkoPropertyChange
         this.viiteTaulukko.repaint();
@@ -435,12 +485,13 @@ public class Gui extends javax.swing.JFrame {
         kontrolleri.tallenna();
     }//GEN-LAST:event_formWindowClosing
 
-    private void tagiLuetteloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tagiLuetteloActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tagiLuetteloActionPerformed
-
     private void poistaTagiViitteestaNappiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_poistaTagiViitteestaNappiActionPerformed
         // TODO add your handling code here:
+        Viite valittu = valittuViite();
+        if (valittu != null) {
+            valittu.haeTagit().remove((String) this.tagiValintaBoksi.getSelectedItem());
+        }
+        paivitaTagit();
     }//GEN-LAST:event_poistaTagiViitteestaNappiActionPerformed
 
     private void uusiTagiKenttaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uusiTagiKenttaActionPerformed
@@ -449,15 +500,30 @@ public class Gui extends javax.swing.JFrame {
 
     private void lisaaTagiNappiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lisaaTagiNappiActionPerformed
         // TODO add your handling code here:
+        kontrolleri.getTagit().add(this.uusiTagiKentta.getText());
+        paivitaTagit();
     }//GEN-LAST:event_lisaaTagiNappiActionPerformed
 
     private void liitaNappiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_liitaNappiActionPerformed
         // TODO add your handling code here:
+        Viite valittu = valittuViite();
+        if (valittu != null) {
+            valittu.haeTagit().add((String) this.tagiValintaBoksi.getSelectedItem());
+        }
+        paivitaTagit();
+
     }//GEN-LAST:event_liitaNappiActionPerformed
 
     private void tekstiMuuttunut(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_tekstiMuuttunut
         // TODO add your handling code here:
     }//GEN-LAST:event_tekstiMuuttunut
+
+    private void poistaTagiNappiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_poistaTagiNappiActionPerformed
+        // TODO add your handling code here:
+        kontrolleri.poistaTagiKaikista((String) this.tagiValintaBoksi.getSelectedItem());
+        paivitaTagit();
+        
+    }//GEN-LAST:event_poistaTagiNappiActionPerformed
 //    /**
 //     * @param args the command line arguments
 //     */
@@ -493,12 +559,19 @@ public class Gui extends javax.swing.JFrame {
 //        });
 //    }
     private final transient Kontrolleri kontrolleri;
+    private Taulukko taulukko;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList<ViiteTyyppiSailo> attribuuttiLista;
     private javax.swing.JTextField hakuKentta;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JEditorPane jEditorPane2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
