@@ -9,7 +9,7 @@ import koodikattila.viitehallinta.domain.ViiteTyyppi;
 import koodikattila.viitehallinta.tieto.IO;
 import koodikattila.viitehallinta.tieto.Viitekokoelma;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Matchers.any;
@@ -128,5 +128,33 @@ public class KontrolleriTest {
         kontrolleri = new Kontrolleri(mockTiedonsaanti, null, null);
         kontrolleri.tallenna();
         verify(mockTiedonsaanti).tallenna(isNull(File.class), any(Viitekokoelma.class));
+    }
+
+    @Test
+    public void viiteavainMuodostetaanOikeinKunYksiKirjoittaja() {
+        Viite viite = new Viite(ViiteTyyppi.book);
+        viite.asetaArvo(Attribuutti.author, "Ruohonen, Henna");
+        viite.asetaArvo(Attribuutti.year, "2014");
+        kontrolleri.lisaaViite(viite);
+        
+        assertEquals("Ru14", kontrolleri.generoiViiteavain(viite));
+    }
+
+    @Test
+    public void viiteavainMuodostetaanOikeinKunKolmeKirjoittajaa() {
+        Viite viite = new Viite(ViiteTyyppi.book);
+        viite.asetaArvo(Attribuutti.author, "Ruohonen, Henna and Kalliokoski, Liekki and Niinistö, Sauli");
+        viite.asetaArvo(Attribuutti.year, "1991");
+        kontrolleri.lisaaViite(viite);
+        
+        assertEquals("RKN91", kontrolleri.generoiViiteavain(viite));
+    }
+
+    @Test
+    public void viiteavainEiOleTyhja() {
+        Viite viite = new Viite(ViiteTyyppi.book);
+        kontrolleri.lisaaViite(viite);
+        kontrolleri.generoiViiteavain(viite);
+        assertNotNull(viite.getAvain());
     }
 }
